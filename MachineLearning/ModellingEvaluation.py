@@ -4,7 +4,7 @@ from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import cross_val_score
 from sklearn.linear_model import LogisticRegression
 
-from ML import CSVHandler
+from MachineLearning import CSVHandler
 
 """
 Discussed in the lecture, and also in the hands-on.
