@@ -6,7 +6,7 @@ import requests
 
 url = 'http://www.ebi.ac.uk/pdbe/api/pdb/entry/molecules/'
 idsFile = "/home/urfin/Education/LB-1/Capriotti/project/pdbefold_ids.txt"
-multiFastaFile = "/home/urfin/Education/LB-1/Capriotti/project/pdb_seqres.txt"
+multiFastaFile = "/home/urfin/Education/LB-1/Capriotti/project/pdbefold_multifasta.fasta"
 
 def fetchSequenceById(proteinId: str, chain: str) -> str:
     result = requests.get(url + proteinId)
