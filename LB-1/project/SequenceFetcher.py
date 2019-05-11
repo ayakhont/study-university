@@ -5,8 +5,8 @@ import requests
 # http://www.ebi.ac.uk/pdbe/api/doc/
 
 url = 'http://www.ebi.ac.uk/pdbe/api/pdb/entry/molecules/'
-idsFile = "/home/urfin/Education/LB-1/Capriotti/project/pdbefold_ids.txt"
-multiFastaFile = "/home/urfin/Education/LB-1/Capriotti/project/pdbefold_multifasta.fasta"
+idsFile = "pdbefold_ids.txt"
+multiFastaFile = "pdbefold_multifasta.fasta"
 
 def fetchSequenceById(proteinId: str, chain: str) -> str:
     result = requests.get(url + proteinId)
@@ -43,5 +43,6 @@ def writeMiltifasta(miltiFastaPath: str, idsWithSequences: dict):
             file.write(idsWithSequences[key] + '\n')
 
 
-idBySequenceMap = getIdBySequenceMap(idsFile)
-writeMiltifasta(multiFastaFile, idBySequenceMap)
+if __name__ == '__main__':
+    idBySequenceMap = getIdBySequenceMap(idsFile)
+    writeMiltifasta(multiFastaFile, idBySequenceMap)
