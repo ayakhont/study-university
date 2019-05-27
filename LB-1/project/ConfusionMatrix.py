@@ -39,7 +39,7 @@ def printPerformance(matrix):
 
 
 if __name__ == '__main__':
-    th = float("1E-5")  # threshold
+    th = float("1E-11")  # threshold
     score_pos = -2  # position of the score
     if len(sys.argv) > 3:
         score_pos = int(sys.argv[3]) - 1
