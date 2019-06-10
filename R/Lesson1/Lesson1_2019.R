@@ -79,7 +79,7 @@ V6 <- as.numeric(V5)
 V6
 V5
 V4
-
+V6
 # Back from factors to characters
 V7 <- as.character(V5)
 V7
@@ -294,8 +294,10 @@ gene_table[gene_table$Freq == max(gene_table$Freq),]
 write.table(gene_table,file="gene_table.txt",sep="\t")
 write.table(gene_table,file="gene_table.txt",sep="\t",row.names=F)
 
-# save writes an external representation of R objects to the specified file. The objects can be read back from the file at a later date by using the function load or attach (or data in some cases).
-# save.image() is just a short-cut for 'save my current workspace', i.e., save(list = ls(all.names = TRUE), file = ".RData", envir = .GlobalEnv). It is also what happens with q("yes").
+# save writes an external representation of R objects to the specified file. The objects can be read back from the file
+# at a later date by using the function load or attach (or data in some cases).
+# save.image() is just a short-cut for 'save my current workspace', i.e., save(list = ls(all.names = TRUE),
+# file = ".RData", envir = .GlobalEnv). It is also what happens with q("yes").
 save(gene_table,file="gene_table.RData")
 save.image("Lesson_1.RData")
 
