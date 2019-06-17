@@ -1,10 +1,10 @@
 # Install minfi and 
 ## try http:// if https:// URLs are not supported
-source("https://bioconductor.org/biocLite.R")
-biocLite(c("minfi","shinyMethyl")) 
+#source("https://bioconductor.org/biocLite.R")
+#biocLite(c("minfi","shinyMethyl"))
 
 rm(list=ls())
-setwd("C:/Users/mugiu/Dropbox/DRD_2019/3/Input_data")
+setwd("/home/urfin/PycharmProjects/study-university/R/Lesson3/input_data")
 # list the files included in the folder
 list.files()
 # let's have a look to the csv
@@ -22,16 +22,16 @@ library(minfi)
 vignette("minfi")
 
 # Set the directory in which the raw data are stored
-baseDir <- ("C:/Users/mugiu/Dropbox/DRD_2019/3/Input_data")
+baseDir <- ("/home/urfin/PycharmProjects/study-university/R/Lesson3/input_data")
 targets <- read.metharray.sheet(baseDir)
 targets
 
 # Create an object of class RGChannelSet
 ?read.metharray.exp
-RGset <- read.metharray.exp(targets = targets)
+RGset <- read.metharray.exp(base = baseDir)
 
 # Now I change the directory in which I want to save the new files
-setwd("C:/Users/mugiu/Dropbox/DRD_2019/3")
+setwd("/home/urfin/PycharmProjects/study-university/R/Lesson3/")
 save(RGset,file="RGset.RData")
 
 load("RGset.RData")
@@ -53,7 +53,7 @@ dim(Green)
 head(Green)
 
 # What are rownames?
-load('C:/Users/mugiu/Dropbox/DRD_2019/2/Illumina450Manifest_clean.RData')
+load('/home/urfin/PycharmProjects/study-university/R/Lesson2/Illumina450Manifest_clean.RData')
 ls()
 head(Illumina450Manifest_clean)
 
@@ -146,8 +146,8 @@ library(shinyMethyl)
 vignette("shinyMethyl")
 # summary <- shinySummarize(RGset) # do not launch it now, it takes some minutes
 # save(summary,file="summary_shinyMethyl.RData")
-load('summary_shinyMethyl.RData')
-runShinyMethyl(summary)
+# load('summary_shinyMethyl.RData')
+# runShinyMethyl(summary)
 
 
 ####################################
@@ -224,29 +224,29 @@ save(MSet.raw_filtered,file="MSet.raw_filtered.RData")
 ####################################
 ### Accessing annotation for Illumina methylation objects
 ####################################
-?getAnnotation
-getAnnotation(RGset)
-df_Annotation <- getAnnotation(RGset)
-str(df_Annotation)
-df_Annotation <- data.frame(getAnnotation(RGset))
-str(df_Annotation)
-
-
-####################################
-### Filtering of SNPs  
-####################################
-?dropLociWithSnps
-dropLociWithSnps(MSet.raw)
-
-# First, we have to convert the MethylSet Object in a GenomiMethylSet object
-#GenomicMSet.raw_filtered <- mapToGenome(MSet.raw_filtered)
-#save(GenomicMSet.raw_filtered,file="GenomicMSet.raw_filtered.RData")
-load("GenomicMSet.raw_filtered.RData")
-GenomicMSet.raw_filtered
-dropSNPs_CpG <- dropLociWithSnps(GenomicMSet.raw_filtered,snps="CpG")
-dropSNPs_CpG
-dropSNPs_SBE <- dropLociWithSnps(GenomicMSet.raw_filtered,snps="SBE")
-dropSNPs_SBE
+# ?getAnnotation
+# getAnnotation(RGset)
+# df_Annotation <- getAnnotation(RGset)
+# str(df_Annotation)
+# df_Annotation <- data.frame(getAnnotation(RGset))
+# str(df_Annotation)
+#
+#
+# ####################################
+# ### Filtering of SNPs
+# ####################################
+# ?dropLociWithSnps
+# dropLociWithSnps(MSet.raw)
+#
+# # First, we have to convert the MethylSet Object in a GenomiMethylSet object
+# #GenomicMSet.raw_filtered <- mapToGenome(MSet.raw_filtered)
+# #save(GenomicMSet.raw_filtered,file="GenomicMSet.raw_filtered.RData")
+# load("GenomicMSet.raw_filtered.RData")
+# GenomicMSet.raw_filtered
+# dropSNPs_CpG <- dropLociWithSnps(GenomicMSet.raw_filtered,snps="CpG")
+# dropSNPs_CpG
+# dropSNPs_SBE <- dropLociWithSnps(GenomicMSet.raw_filtered,snps="SBE")
+# dropSNPs_SBE
 
 
 ####################################
@@ -277,6 +277,7 @@ log2(579/458)
 
 ?density
 density(beta)
+jpeg("plot.jpg")
 plot(density(beta))
 plot(density(beta),main="Density of Beta Values")
 plot(density(beta),main="Density of Beta Values",col="blue")
