@@ -1,14 +1,20 @@
 import os
 import matplotlib.pyplot as plt
 import numpy as np
+from pathlib import Path
 from SecondaryStructure import SecondaryStructure
 from GraphBuilder import GraphBuilder
+from Scope import Scope
+from RestAdapter import RestAdapter
 
-dssp_dir = "/home/urfin/Dropbox/EBP 2018/LB2/Castrense/project/dssp/"
-fasta_dir = "/home/urfin/Dropbox/EBP 2018/LB2/Castrense/project/fasta/"
+project_dir = "/home/urfin/Dropbox/EBP 2018/LB2/Castrense/project/"
+dssp_dir = project_dir + "dssp/"
+fasta_dir = project_dir + "fasta/"
+scope_file_name = "dir.cla.scope.2.06-stable.txt"
+tax_file_name = "./tax_file.txt"
 
 
-def calculate_statistics(ss_composition: SecondaryStructure, residue_composition: dict):
+def calculate_dssp_statistics(ss_composition: SecondaryStructure, residue_composition: dict):
     try:
         for dssp_filename in os.listdir(dssp_dir):
             with open(dssp_dir + dssp_filename, "r") as dssp_file:
@@ -53,16 +59,57 @@ def print_statistics(ss_composition: SecondaryStructure, residue_composition: di
         print("{}: {}".format(key, residue_composition.get(key).get_string()))
 
 
+def parse_scope_file() -> list:
+    scope_list = []
+    with open(project_dir + scope_file_name, "r") as file:
+        for line in file:
+            if line[0] != "#":
+                list = line.split()
+                scope = Scope(list[0], list[1])
+                scope_list.append(scope)
+    return scope_list
+
+
+def calculate_taxonomy_statistics(scope_data: list) -> dict:
+    taxonomies = dict()
+    tax_file = Path(tax_file_name)
+    if tax_file.exists():
+        with open(tax_file, "r") as file:
+            for line in file:
+                list = line.split("\t")
+                taxonomies[list[0]] = int(list[1])
+            return taxonomies
+    else:
+        restAdapter = RestAdapter
+        for scope in scope_data:
+            taxa = restAdapter.get_taxonomy_by_protein_id(scope.pdbId)
+            print(taxa)
+            if taxa in taxonomies.keys():
+                current_counter = taxonomies.get(taxa)
+                current_counter += 1
+                taxonomies[taxa] = current_counter
+            else:
+                taxonomies[taxa] = 1
+
+        with open(tax_file, "w") as file:
+            for key in taxonomies.keys():
+                if key != "null" or key != "None":
+                    file.write(key + "\t" + str(taxonomies.get(key)) + "\n")
+
+    return taxonomies
+
+
 if __name__ == "__main__":
     ss_composition = SecondaryStructure()
     residue_composition = dict()
     graphBuilder = GraphBuilder
+    print(calculate_taxonomy_statistics(parse_scope_file()))
 
-    calculate_statistics(ss_composition, residue_composition)
-    print_statistics(ss_composition, residue_composition)
-
-    graphBuilder.plot_pie_chart(ss_composition)
-    graphBuilder.plot_bar_chart(graphBuilder, residue_composition)
+    # calculate_dssp_statistics(ss_composition, residue_composition)
+    # print_statistics(ss_composition, residue_composition)
+    #
+    # graphBuilder.plot_pie_chart(ss_composition)
+    # graphBuilder.plot_bar_chart(graphBuilder, residue_composition)
 
 
 
