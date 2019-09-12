@@ -1,0 +1,49 @@
+About VM:
+==================================================================
+Open session:
+sudo openvpn --config LSB_YakhontovAlexander_lsb-gw.ovpn
+ssh -i um89_id_rsa um89@m89.lsb.biocomp.unibo.it
+
+enter into environment:
+source /opt/conda/bin/activate
+
+scp:
+scp -i keys/um89_id_rsa notice.txt um89@m89.lsb.biocomp.unibo.it:/home/um89
+
+at ____ now >> log.txt
+nohup ____ &
+
+Step 1: graphs
+==================================================================
+DsspStatistics.py run to get graphs
+
+Step 2: obtaining blind set
+==================================================================
+1) Search Parameter:
+DepositDateQuery: pdbx_database_status.recvd_initial_deposition_date.comparator
+=between pdbx_database_status.recvd_initial_deposition_date.min=2015-01-01
+and Resolution is between 0.0
+and 2.5 and Sequence Length is between 50
+and 300 and Experimental Method is X-RAY
+and Chain Type: there is a Protein chain but not any DNA or RNA or Hybrid
+and Percent Sequence Alignment Search : PDB can contain Expression Tag sequence = Yes ,
+and Representative Structures at 30% Sequence Identity
+
+As result 3713 entities
+
+2) combine all fasta files in training set in one:
+cat *.fasta >> training_data.fasta
+
+3) To filter out PDB prooblems to run FilterOut.py -> rewriting blind_data.txt
+
+4) To remove reduntency:
+ - cluster al sequences with 100% identity to remove absolutely similar seqs:
+    /home/urfin/programs/blast/blast-2.2.26/bin/blastclust
+        -S 100 -i blind_test_data.fasta -o clustered.txt
+
+
+
+
+
+
+

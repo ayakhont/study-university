@@ -104,12 +104,16 @@ if __name__ == "__main__":
     residue_composition = dict()
     graphBuilder = GraphBuilder
     print(calculate_taxonomy_statistics(parse_scope_file()))
+    #TODO finish parsing all taxa to the local txt file
+    #TODO create pie chart for taxa
+    #TODO create heat map
+    #TODO change the presentation of Y axis in bar chart
 
-    # calculate_dssp_statistics(ss_composition, residue_composition)
-    # print_statistics(ss_composition, residue_composition)
-    #
-    # graphBuilder.plot_pie_chart(ss_composition)
-    # graphBuilder.plot_bar_chart(graphBuilder, residue_composition)
+    calculate_dssp_statistics(ss_composition, residue_composition)
+    print_statistics(ss_composition, residue_composition)
+
+    graphBuilder.plot_pie_chart(ss_composition)
+    graphBuilder.plot_bar_chart(graphBuilder, residue_composition)
 
 
 
