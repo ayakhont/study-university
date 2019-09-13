@@ -1,8 +1,17 @@
+from operator import itemgetter
+
 blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
 clustered_data = "/home/urfin/Education/LB-2/project/data_preparation/clustered.txt"
 filtered_blind_data = "/home/urfin/Education/LB-2/project/data_preparation/filtered_blind_data.txt"
+plastp_tab = "/home/urfin/Education/LB-2/project/data_preparation/hits.blast.tab"
+final_blind_data = "/home/urfin/Education/LB-2/project/data_preparation/final_blind_data.txt"
 
 
+# clear data received from PDB:
+# - remove similar chains
+# - remove chains shorter than 50 residues
+# - remove trash from sequence headers
+# write result in blind_data
 def filter_out_blind_data(blind_data):
     new_list = list()
     with open(blind_data, "r") as f:
@@ -29,10 +38,11 @@ def filter_out_blind_data(blind_data):
         for line in new_list:
             file.write(line)
 
+
 # build a map of seq Id ant it's sequence in one string
-def get_map_from_fasta_file(file):
+def get_map_from_fasta_file(fasta_file) -> dict:
     map = dict()
-    with open(blind_data, "r") as f:
+    with open(fasta_file, "r") as f:
         lines = f.readlines()
         current_seq = ""
         for i in range(0, len(lines)):
@@ -46,18 +56,47 @@ def get_map_from_fasta_file(file):
                 map[current_seq] = seq
     return map
 
-def filter_out_from_clustered_data(clustered_data, filtered_blind_data):
+
+# map first sequences
+# from clustered data (clustered_data)
+# to new file with blind data set (filtered_blind_data)
+def filter_out_clustered_data(clustered_data, filtered_blind_data):
     clustered_list = list()
     blind_data_dict = dict()
     # read the first 150 lines and each first seq Id from each of them
     with open(clustered_data, "r") as f:
         lines = f.readlines()
-        for i in range(0, 150):
+        for i in range(0, len(lines)):
             line = lines[i]
-            clustered_list.append(line[0:7])
-    #with open(filtered_blind_data, "w") as file:
+            clustered_list.append(line[0:6])
+
+    blind_data_dict = get_map_from_fasta_file(blind_data)
+
+    with open(filtered_blind_data, "w") as file:
+        for key in clustered_list:
+            file.write(">" + key + "\n")
+            file.write(blind_data_dict[key] + "\n")
+
+# sort tab output file by similarity and chose 150 sequences with the lowest similarity level
+def filter_out_considering_training_set(plastp_tab, final_blind_data):
+    tab_list = list()
+    with open(plastp_tab, "r") as file:
+        for line in file:
+            inner_list = line.split()
+            tab_list.append(inner_list)
+    tab_list.sort(key=lambda x: float(x[2]))
+
+    blind_data_dict = get_map_from_fasta_file(filtered_blind_data)
+
+    with open(final_blind_data, "w") as file:
+        for i in range(0, 150):
+            splitted_line = tab_list[i]
+            key = splitted_line[0]
+            file.write(">" + key + "\n")
+            file.write(blind_data_dict[key] + "\n")
 
 
 if __name__ == "__main__":
     #filter_out_blind_data(blind_data)
-    print(get_map_from_fasta_file(blind_data))
+    #filter_out_from_clustered_data(clustered_data, filtered_blind_data)
+    filter_out_considering_training_set(plastp_tab, final_blind_data)

@@ -35,9 +35,18 @@ cat *.fasta >> training_data.fasta
 
 3) To filter out PDB prooblems to run FilterOut.py -> rewriting blind_data.txt
 
-4) To remove reduntency:
+4) To remove inward redundancy:
  - cluster al sequences with 30% identity:
     /home/urfin/programs/blast/blast-2.2.26/bin/blastclust -S 30 -i blind_data.txt -o clustered.txt -a 4 -L 0.0
+
+ - take only first sequences Id from clustered file
+
+ - to create new filtered_blind_test fasta file 5136/2 sequences
+
+4) To remove outward redundancy:
+ - blastp -query filtered_blind_data.txt -db training_data.fasta -evalue 0.01 -outfmt 6 -out hits.blast.tab
+
+ - we sort tab output file by similarity and chose 150 sequences with the lowest similarity level
 
 
 
