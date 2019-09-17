@@ -103,7 +103,7 @@ if __name__ == "__main__":
     ss_composition = SecondaryStructure()
     residue_composition = dict()
     graphBuilder = GraphBuilder
-    print(calculate_taxonomy_statistics(parse_scope_file()))
+    #print(calculate_taxonomy_statistics(parse_scope_file()))
     #TODO finish parsing all taxa to the local txt file
     #TODO create pie chart for taxa
     #TODO create heat map

@@ -1,4 +1,4 @@
-from operator import itemgetter
+from DownloadManager import DownloadManager
 
 blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
 clustered_data = "/home/urfin/Education/LB-2/project/data_preparation/clustered.txt"
@@ -88,12 +88,21 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
 
     blind_data_dict = get_map_from_fasta_file(filtered_blind_data)
 
-    with open(final_blind_data, "w") as file:
-        for i in range(0, 150):
-            splitted_line = tab_list[i]
-            key = splitted_line[0]
-            file.write(">" + key + "\n")
-            file.write(blind_data_dict[key] + "\n")
+    dm = DownloadManager()
+    count = 0
+    i = 0
+    while count < 150:
+        splitted_line = tab_list[i]
+        key = splitted_line[0]
+        key = key[0:4]
+        is_download_successful = dm.downloadFileByPdbId(key)
+        if is_download_successful:
+            count += 1
+            with open(final_blind_data, "w") as file:
+                key_with_chain = splitted_line[0]
+                file.write(">" + key_with_chain + "\n")
+                file.write(blind_data_dict[key_with_chain] + "\n")
+        i += 1
 
 
 if __name__ == "__main__":

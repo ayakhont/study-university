@@ -47,6 +47,10 @@ cat *.fasta >> training_data.fasta
  - blastp -query filtered_blind_data.txt -db training_data.fasta -evalue 0.01 -outfmt 6 -out hits.blast.tab
 
  - we sort tab output file by similarity and chose 150 sequences with the lowest similarity level
+  (to filter out all data from blind test set with high similarity with training set).
+  filter_out_considering_training_set() -> final_blind_data
+
+5)
 
 
 
