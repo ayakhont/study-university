@@ -1,3 +1,5 @@
+import os
+
 from DownloadManager import DownloadManager
 
 blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
@@ -77,7 +79,8 @@ def filter_out_clustered_data(clustered_data, filtered_blind_data):
             file.write(">" + key + "\n")
             file.write(blind_data_dict[key] + "\n")
 
-# sort tab output file by similarity and chose 150 sequences with the lowest similarity level
+# 1) sort tab output file by similarity and chose 150 sequences with the lowest similarity level
+# 2) download each of these sequence to appropriate pdb file
 def filter_out_considering_training_set(plastp_tab, final_blind_data):
     tab_list = list()
     with open(plastp_tab, "r") as file:
@@ -91,6 +94,7 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
     dm = DownloadManager()
     count = 0
     i = 0
+    list_of_downloaded_id = list()
     while count < 150:
         splitted_line = tab_list[i]
         key = splitted_line[0]
@@ -98,14 +102,26 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
         is_download_successful = dm.downloadFileByPdbId(key)
         if is_download_successful:
             count += 1
-            with open(final_blind_data, "w") as file:
-                key_with_chain = splitted_line[0]
-                file.write(">" + key_with_chain + "\n")
-                file.write(blind_data_dict[key_with_chain] + "\n")
+            list_of_downloaded_id.append(splitted_line[0])
         i += 1
+
+    return list_of_downloaded_id
+
+
+# write down each of filtered seq to final_blind_data file
+def create_final_blind_data_file(final_blind_data, list_of_downloaded_id,
+                                 path="/home/urfin/Education/LB-2/project/data_preparation/pdb_files/"):
+
+    blind_data_dict = get_map_from_fasta_file(filtered_blind_data)
+    with open(final_blind_data, "w") as file:
+        for key in list_of_downloaded_id:
+            file.write(">" + key + "\n")
+            file.write(blind_data_dict[key] + "\n")
 
 
 if __name__ == "__main__":
     #filter_out_blind_data(blind_data)
     #filter_out_from_clustered_data(clustered_data, filtered_blind_data)
-    filter_out_considering_training_set(plastp_tab, final_blind_data)
+    list_of_downloaded_id = filter_out_considering_training_set(plastp_tab, final_blind_data)
+    create_final_blind_data_file(final_blind_data, list_of_downloaded_id)
+

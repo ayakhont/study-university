@@ -50,7 +50,12 @@ cat *.fasta >> training_data.fasta
   (to filter out all data from blind test set with high similarity with training set).
   filter_out_considering_training_set() -> final_blind_data
 
-5)
+5) To create dssp for each sequence in blind test set
+ - download each of these sequence to appropriate pdb file
+
+ - to run for each pdb file mkdssp to create dssp files
+ (DsspCreator.py)
+
 
 
 
