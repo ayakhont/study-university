@@ -1,6 +1,5 @@
-import os
-
 from DownloadManager import DownloadManager
+from Utils import Utils
 
 blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
 clustered_data = "/home/urfin/Education/LB-2/project/data_preparation/clustered.txt"
@@ -41,24 +40,6 @@ def filter_out_blind_data(blind_data):
             file.write(line)
 
 
-# build a map of seq Id ant it's sequence in one string
-def get_map_from_fasta_file(fasta_file) -> dict:
-    map = dict()
-    with open(fasta_file, "r") as f:
-        lines = f.readlines()
-        current_seq = ""
-        for i in range(0, len(lines)):
-            line = lines[i]
-            if line[0] == ">":
-                map[line[1:7]] = ""
-                current_seq = line[1:7]
-            else:
-                current = line.rstrip()
-                seq = map[current_seq] + current
-                map[current_seq] = seq
-    return map
-
-
 # map first sequences
 # from clustered data (clustered_data)
 # to new file with blind data set (filtered_blind_data)
@@ -72,7 +53,7 @@ def filter_out_clustered_data(clustered_data, filtered_blind_data):
             line = lines[i]
             clustered_list.append(line[0:6])
 
-    blind_data_dict = get_map_from_fasta_file(blind_data)
+    blind_data_dict = Utils.get_map_from_fasta_file(blind_data)
 
     with open(filtered_blind_data, "w") as file:
         for key in clustered_list:
@@ -89,7 +70,7 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
             tab_list.append(inner_list)
     tab_list.sort(key=lambda x: float(x[2]))
 
-    blind_data_dict = get_map_from_fasta_file(filtered_blind_data)
+    blind_data_dict = Utils.get_map_from_fasta_file(filtered_blind_data)
 
     dm = DownloadManager()
     count = 0
@@ -112,7 +93,7 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
 def create_final_blind_data_file(final_blind_data, list_of_downloaded_id,
                                  path="/home/urfin/Education/LB-2/project/data_preparation/pdb_files/"):
 
-    blind_data_dict = get_map_from_fasta_file(filtered_blind_data)
+    blind_data_dict = Utils.get_map_from_fasta_file(filtered_blind_data)
     with open(final_blind_data, "w") as file:
         for key in list_of_downloaded_id:
             file.write(">" + key + "\n")

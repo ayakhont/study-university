@@ -56,6 +56,8 @@ cat *.fasta >> training_data.fasta
  - to run for each pdb file mkdssp to create dssp files
  (DsspCreator.py)
 
+6)
+
 
 
 
