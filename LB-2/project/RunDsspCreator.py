@@ -6,12 +6,12 @@ from Utils import Utils
 
 def prepare_full_dssp_files():
     list_of_pdb_files = list()
-    for pdb_filename in os.listdir(PathConstants.pdb_dir):
+    for pdb_filename in os.listdir(PathConstants.blind_pdb_dir):
         list_of_pdb_files.append(pdb_filename)
 
     for filename in list_of_pdb_files:
-        command = "mkdssp -i " + PathConstants.pdb_dir + filename + " -o " \
-                  + PathConstants.dssp_dir + filename[0:4] + ".dssp"
+        command = "mkdssp -i " + PathConstants.blind_pdb_dir + filename + " -o " \
+                  + PathConstants.blind_dssp_dir + filename[0:4] + ".dssp"
         print("Running the command: " + command)
         process = subprocess.Popen(command, shell=True, stdout=subprocess.PIPE)
         process.wait()
@@ -23,7 +23,7 @@ def prepare_short_dssp_files(final_blind_data):
     map_id_seq = Utils.get_map_from_fasta_file(final_blind_data)
     map_id_ss = dict()
     for key in map_id_seq.keys():
-        with open(PathConstants.dssp_dir + key[0:4] + ".dssp", "r") as file:
+        with open(PathConstants.blind_dssp_dir + key[0:4] + ".dssp", "r") as file:
             is_start_block = False
             ss = ""
             for line in file:
@@ -35,7 +35,7 @@ def prepare_short_dssp_files(final_blind_data):
                     ss += ss_character
             map_id_ss[key] = ss
 
-        with open(PathConstants.dssp_short_dir + key[0:4] + ".dssp", "w") as file:
+        with open(PathConstants.blind_dssp_short_dir + key[0:4] + ".dssp", "w") as file:
             file.write(">" + key + "\n")
             file.write(map_id_ss[key] + "\n")
 

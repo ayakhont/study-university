@@ -56,7 +56,9 @@ cat *.fasta >> training_data.fasta
  - to run for each pdb file mkdssp to create dssp files
  (DsspCreator.py)
 
-6) GOR method
+Step 3: training
+==================================================================
+1) Profiling for GOR method
  -
 
 
