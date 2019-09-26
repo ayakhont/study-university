@@ -34,6 +34,8 @@ def calculate_dssp_statistics(ss_composition: SecondaryStructure, residue_compos
                                 for i in range(0, len(dssp_line)):
                                     residue = fasta_line[i]
                                     ss = dssp_line[i]
+                                    if residue == "X" or residue == "\n":
+                                        continue
                                     if residue in residue_composition.keys():
                                         obj = residue_composition.get(residue)
                                     else:
