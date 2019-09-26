@@ -76,7 +76,6 @@ class GorProfile:
                     else:
                         self.count_vector_profile(dssp_line, fasta_line, window_size)
 
-
     def count_non_vector_profile(self, dssp_line, fasta_line):
         if len(dssp_line) == len(fasta_line):
             for i in range(0, len(dssp_line)):
@@ -91,18 +90,21 @@ class GorProfile:
         else:
             print("This sequence is not equal to dssp string: ", fasta_line)
 
-
     def count_vector_profile(self, dssp_line, fasta_line, window_size: int):
         if len(dssp_line) == len(fasta_line):
             for i in range(0, len(dssp_line)):
                 ss = dssp_line[i]
-                for j in range(i - i//window_size, i + 1 + i//window_size):
+                vector_counter = -1
+                for j in range(i - window_size // 2, i + 1 + window_size // 2):
+                    vector_counter += 1
                     if j < 0 or j >= len(fasta_line):
                         continue
                     residue = fasta_line[j]
                     if residue == "X" or residue == "\n":
                         continue
                     secondary_structure = self.residues_dict.get(residue)
-                    secondary_structure.update_counter(ss, )
+                    secondary_structure.update_counter(ss, vector_counter)
+                    self.residues_dict[residue] = secondary_structure
+                self.common_counter.update_counter(ss)
         else:
             print("This sequence is not equal to dssp string: ", fasta_line)
