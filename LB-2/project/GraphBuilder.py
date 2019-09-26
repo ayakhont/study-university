@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from SecondaryStructure import SecondaryStructure
+from project.SecondaryStructure import SecondaryStructure
 
 
 class GraphBuilder:

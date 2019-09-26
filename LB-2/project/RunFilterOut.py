@@ -1,5 +1,5 @@
-from DownloadManager import DownloadManager
-from Utils import Utils
+from project.DownloadManager import DownloadManager
+from project.Utils import Utils
 
 blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
 clustered_data = "/home/urfin/Education/LB-2/project/data_preparation/clustered.txt"

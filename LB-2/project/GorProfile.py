@@ -1,6 +1,6 @@
 import os
-from SecondaryStructure import SecondaryStructure
-from SecondaryStructureWindow import SecondaryStructureWindow
+from project.SecondaryStructure import SecondaryStructure
+from project.SecondaryStructureWindow import SecondaryStructureWindow
 
 
 class GorProfile:

@@ -2,10 +2,10 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
-from SecondaryStructure import SecondaryStructure
-from GraphBuilder import GraphBuilder
-from Scope import Scope
-from RestAdapter import RestAdapter
+from project.SecondaryStructure import SecondaryStructure
+from project.GraphBuilder import GraphBuilder
+from project.Scope import Scope
+from project.RestAdapter import RestAdapter
 
 project_dir = "/home/urfin/Dropbox/EBP 2018/LB2/Castrense/project/"
 dssp_dir = project_dir + "dssp/"

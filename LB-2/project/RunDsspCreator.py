@@ -1,7 +1,7 @@
 import os
 import subprocess
-from PathConstants import PathConstants
-from Utils import Utils
+from project.PathConstants import PathConstants
+from project.Utils import Utils
 
 
 def prepare_full_dssp_files():

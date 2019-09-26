@@ -1,5 +1,5 @@
-from GorProfile import GorProfile
-from PathConstants import PathConstants
+from project.GorProfile import GorProfile
+from project.PathConstants import PathConstants
 
 if __name__ == "__main__":
     # gor_profile = GorProfile()
