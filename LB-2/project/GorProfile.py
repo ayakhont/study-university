@@ -8,34 +8,33 @@ class GorProfile:
     common_counter: SecondaryStructure  # common counter for all residues
     residues_dict: dict                 # dictionary for mapping residue to secondary structure object
 
-    # initialize non-vector GOR profile
-    def __init__(self):
+    # initialize vector GOR profile in case of pointing out window size
+    # otherwise initialize non-vector GOR profile
+    def __init__(self, window_size=None):
         self.common_counter = SecondaryStructure()
-        self.residues_dict = {
-            "A": SecondaryStructure(), "C": SecondaryStructure(), "D": SecondaryStructure(),
-            "E": SecondaryStructure(), "F": SecondaryStructure(), "G": SecondaryStructure(),
-            "H": SecondaryStructure(), "I": SecondaryStructure(), "K": SecondaryStructure(),
-            "L": SecondaryStructure(), "M": SecondaryStructure(), "N": SecondaryStructure(),
-            "P": SecondaryStructure(), "Q": SecondaryStructure(), "R": SecondaryStructure(),
-            "S": SecondaryStructure(), "T": SecondaryStructure(), "V": SecondaryStructure(),
-            "W": SecondaryStructure(), "Y": SecondaryStructure()
-        }
-
-    # initialize vector GOR profile with pointing out window size
-    def __init__(self, window_size: int):
-        self.common_counter = SecondaryStructure()
-        self.residues_dict = {
-            "A": SecondaryStructureWindow(window_size), "C": SecondaryStructureWindow(window_size),
-            "D": SecondaryStructureWindow(window_size), "E": SecondaryStructureWindow(window_size),
-            "F": SecondaryStructureWindow(window_size), "G": SecondaryStructureWindow(window_size),
-            "H": SecondaryStructureWindow(window_size), "I": SecondaryStructureWindow(window_size),
-            "K": SecondaryStructureWindow(window_size), "L": SecondaryStructureWindow(window_size),
-            "M": SecondaryStructureWindow(window_size), "N": SecondaryStructureWindow(window_size),
-            "P": SecondaryStructureWindow(window_size), "Q": SecondaryStructureWindow(window_size),
-            "R": SecondaryStructureWindow(window_size), "S": SecondaryStructureWindow(window_size),
-            "T": SecondaryStructureWindow(window_size), "V": SecondaryStructureWindow(window_size),
-            "W": SecondaryStructureWindow(window_size), "Y": SecondaryStructureWindow(window_size)
-        }
+        if window_size is not None:
+            self.residues_dict = {
+                "A": SecondaryStructureWindow(window_size), "C": SecondaryStructureWindow(window_size),
+                "D": SecondaryStructureWindow(window_size), "E": SecondaryStructureWindow(window_size),
+                "F": SecondaryStructureWindow(window_size), "G": SecondaryStructureWindow(window_size),
+                "H": SecondaryStructureWindow(window_size), "I": SecondaryStructureWindow(window_size),
+                "K": SecondaryStructureWindow(window_size), "L": SecondaryStructureWindow(window_size),
+                "M": SecondaryStructureWindow(window_size), "N": SecondaryStructureWindow(window_size),
+                "P": SecondaryStructureWindow(window_size), "Q": SecondaryStructureWindow(window_size),
+                "R": SecondaryStructureWindow(window_size), "S": SecondaryStructureWindow(window_size),
+                "T": SecondaryStructureWindow(window_size), "V": SecondaryStructureWindow(window_size),
+                "W": SecondaryStructureWindow(window_size), "Y": SecondaryStructureWindow(window_size)
+            }
+        else:
+            self.residues_dict = {
+                "A": SecondaryStructure(), "C": SecondaryStructure(), "D": SecondaryStructure(),
+                "E": SecondaryStructure(), "F": SecondaryStructure(), "G": SecondaryStructure(),
+                "H": SecondaryStructure(), "I": SecondaryStructure(), "K": SecondaryStructure(),
+                "L": SecondaryStructure(), "M": SecondaryStructure(), "N": SecondaryStructure(),
+                "P": SecondaryStructure(), "Q": SecondaryStructure(), "R": SecondaryStructure(),
+                "S": SecondaryStructure(), "T": SecondaryStructure(), "V": SecondaryStructure(),
+                "W": SecondaryStructure(), "Y": SecondaryStructure()
+            }
 
     def get_string(self):
         common_string = "Common counter for all residues: " + self.common_counter.get_string() + "\n"
@@ -58,7 +57,7 @@ class GorProfile:
             self.residues_dict[key] = ss
 
     # fill in GOR profile from list of dssp and fasta files
-    def fill_in_profile(self, training_fasta_dir: str, training_dssp_dir: str):
+    def train_model(self, training_fasta_dir: str, training_dssp_dir: str, window_size=1):
         for dssp_filename in os.listdir(training_dssp_dir):
             with open(training_dssp_dir + dssp_filename, "r") as dssp_file:
                 fasta_filename = dssp_filename.replace("dssp", "fasta")
@@ -72,22 +71,38 @@ class GorProfile:
                         if dssp_line_in_file[0] != '>':
                             dssp_line = dssp_line_in_file
 
-                    if len(dssp_line) == len(fasta_line):
-                        for i in range(0, len(dssp_line)):
-                            residue = fasta_line[i]
-                            ss = dssp_line[i]
-                            if residue == "X" or residue == "\n":
-                                continue
-                            if residue in self.residues_dict.keys():
-                                secondary_structure = self.residues_dict.get(residue)
-                            else:
-                                secondary_structure = SecondaryStructure()
-                            secondary_structure.update_counter(ss)
-                            self.residues_dict[residue] = secondary_structure
-                            self.common_counter.update_counter(ss)
-
+                    if window_size == 1:
+                        self.count_non_vector_profile(dssp_line, fasta_line)
                     else:
-                        print("These files contains different length of string in sequences: ",
-                              dssp_file)
+                        self.count_vector_profile(dssp_line, fasta_line, window_size)
 
 
+    def count_non_vector_profile(self, dssp_line, fasta_line):
+        if len(dssp_line) == len(fasta_line):
+            for i in range(0, len(dssp_line)):
+                residue = fasta_line[i]
+                ss = dssp_line[i]
+                if residue == "X" or residue == "\n":
+                    return
+                secondary_structure = self.residues_dict.get(residue)
+                secondary_structure.update_counter(ss)
+                self.residues_dict[residue] = secondary_structure
+                self.common_counter.update_counter(ss)
+        else:
+            print("This sequence is not equal to dssp string: ", fasta_line)
+
+
+    def count_vector_profile(self, dssp_line, fasta_line, window_size: int):
+        if len(dssp_line) == len(fasta_line):
+            for i in range(0, len(dssp_line)):
+                ss = dssp_line[i]
+                for j in range(i - i//window_size, i + 1 + i//window_size):
+                    if j < 0 or j >= len(fasta_line):
+                        continue
+                    residue = fasta_line[j]
+                    if residue == "X" or residue == "\n":
+                        continue
+                    secondary_structure = self.residues_dict.get(residue)
+                    secondary_structure.update_counter(ss, )
+        else:
+            print("This sequence is not equal to dssp string: ", fasta_line)
