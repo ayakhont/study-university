@@ -11,3 +11,6 @@ class PathConstants:
     # paths for training
     training_dssp_dir = prj_dir + "dssp/"
     training_fasta_dir = prj_dir + "fasta/"
+
+    # dump file
+    dump_file = prj_dir + "gor_profile.dump"

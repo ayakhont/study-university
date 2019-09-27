@@ -42,7 +42,7 @@ class GorProfile:
              common_string += key + ": " + self.residues_dict[key].get_string() + "\n"
         return common_string
 
-    # normalize non-vector GOR profile
+    # normalize GOR profile
     def normalize(self):
         sum = self.common_counter.common_count
         self.common_counter.e_count = self.common_counter.e_count / sum
@@ -50,10 +50,29 @@ class GorProfile:
         self.common_counter.c_count = self.common_counter.c_count / sum
         for key in self.residues_dict:
             ss = self.residues_dict[key]
-            ss.e_count = ss.e_count / sum
-            ss.h_count = ss.h_count / sum
-            ss.c_count = ss.c_count / sum
-            ss.common_count = ss.common_count / sum
+            if type(ss).__name__ == "SecondaryStructureWindow":
+                new_vector_e_count = list()
+                for element in ss.e_counts:
+                    new_vector_e_count.append(element / sum)
+                ss.e_counts = new_vector_e_count
+                new_vector_h_count = list()
+                for element in ss.h_counts:
+                    new_vector_h_count.append(element / sum)
+                ss.h_counts = new_vector_h_count
+                new_vector_c_count = list()
+                for element in ss.c_counts:
+                    new_vector_c_count.append(element / sum)
+                ss.c_counts = new_vector_c_count
+                new_vector_common_count = list()
+                for element in ss.common_counts:
+                    new_vector_common_count.append(element / sum)
+                ss.common_counts = new_vector_common_count
+            else:
+                ss.e_count = ss.e_count / sum
+                ss.h_count = ss.h_count / sum
+                ss.c_count = ss.c_count / sum
+                ss.common_count = ss.common_count / sum
+
             self.residues_dict[key] = ss
 
     # fill in GOR profile from list of dssp and fasta files
