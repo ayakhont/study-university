@@ -1,3 +1,4 @@
+import math
 import os
 from project.SecondaryStructure import SecondaryStructure
 from project.SecondaryStructureWindow import SecondaryStructureWindow
@@ -7,6 +8,7 @@ class GorProfile:
 
     common_counter: SecondaryStructure  # common counter for all residues
     residues_dict: dict                 # dictionary for mapping residue to secondary structure object
+    window_size: int                    # size of window
 
     # initialize vector GOR profile in case of pointing out window size
     # otherwise initialize non-vector GOR profile
@@ -25,6 +27,7 @@ class GorProfile:
                 "T": SecondaryStructureWindow(window_size), "V": SecondaryStructureWindow(window_size),
                 "W": SecondaryStructureWindow(window_size), "Y": SecondaryStructureWindow(window_size)
             }
+            self.window_size = window_size
         else:
             self.residues_dict = {
                 "A": SecondaryStructure(), "C": SecondaryStructure(), "D": SecondaryStructure(),
@@ -35,6 +38,7 @@ class GorProfile:
                 "S": SecondaryStructure(), "T": SecondaryStructure(), "V": SecondaryStructure(),
                 "W": SecondaryStructure(), "Y": SecondaryStructure()
             }
+            self.window_size = 1
 
     def get_string(self):
         common_string = "Common counter for all residues: " + self.common_counter.get_string() + "\n"
@@ -76,7 +80,7 @@ class GorProfile:
             self.residues_dict[key] = ss
 
     # fill in GOR profile from list of dssp and fasta files
-    def fill_in_profile(self, training_fasta_dir: str, training_dssp_dir: str, window_size=1):
+    def fill_in_profile(self, training_fasta_dir: str, training_dssp_dir: str):
         for dssp_filename in os.listdir(training_dssp_dir):
             with open(training_dssp_dir + dssp_filename, "r") as dssp_file:
                 fasta_filename = dssp_filename.replace("dssp", "fasta")
@@ -90,10 +94,10 @@ class GorProfile:
                         if dssp_line_in_file[0] != '>':
                             dssp_line = dssp_line_in_file
 
-                    if window_size == 1:
+                    if self.window_size == 1:
                         self.count_non_vector_profile(dssp_line, fasta_line)
                     else:
-                        self.count_vector_profile(dssp_line, fasta_line, window_size)
+                        self.count_vector_profile(dssp_line, fasta_line)
 
     def count_non_vector_profile(self, dssp_line, fasta_line):
         if len(dssp_line) == len(fasta_line):
@@ -109,12 +113,12 @@ class GorProfile:
         else:
             print("This sequence is not equal to dssp string: ", fasta_line)
 
-    def count_vector_profile(self, dssp_line, fasta_line, window_size: int):
+    def count_vector_profile(self, dssp_line, fasta_line):
         if len(dssp_line) == len(fasta_line):
             for i in range(0, len(dssp_line)):
                 ss = dssp_line[i]
                 vector_counter = -1
-                for j in range(i - window_size // 2, i + 1 + window_size // 2):
+                for j in range(i - self.window_size // 2, i + 1 + self.window_size // 2):
                     vector_counter += 1
                     if j < 0 or j >= len(fasta_line):
                         continue
@@ -127,3 +131,16 @@ class GorProfile:
                 self.common_counter.update_counter(ss)
         else:
             print("This sequence is not equal to dssp string: ", fasta_line)
+
+    def calculate_score(self, residue: str, ss_type: str, position: int) -> float:
+        ssw: SecondaryStructureWindow
+        ssw = self.residues_dict[residue]
+        vector_for_residue = ssw.get_counts_by_ss_type(ss_type)
+
+        p_residue_of_ss_type_in_position = vector_for_residue[position]
+        p_of_ss_type = self.common_counter.get_counts_by_ss_type(ss_type)
+        p_residue_in_position = ssw.common_counts[position]
+        if p_residue_in_position == 0.0:
+            return 0.0
+
+        return math.log10(p_residue_of_ss_type_in_position / p_of_ss_type * p_residue_in_position)

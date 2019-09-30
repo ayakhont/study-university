@@ -24,6 +24,14 @@ class SecondaryStructure:
             self.c_count += 1.0
             self.common_count += 1.0
 
+    def get_counts_by_ss_type(self, ss_type: str):
+        if ss_type == "E":
+            return self.e_count
+        if ss_type == "H":
+            return self.h_count
+        if ss_type == "-" or ss_type == "C":
+            return self.c_count
+
     def get_string(self):
         return "Strand: {}, Helix: {}, Coil: {}, Common: {}"\
             .format(self.e_count, self.h_count, self.c_count, self.common_count)

@@ -17,8 +17,11 @@ if __name__ == "__main__":
     else:
         gor_profile = GorProfile(17)
         gor_model = Gor(gor_profile)
-        gor_model.train_model(PathConstants.training_fasta_dir, PathConstants.training_dssp_dir, 17)
+        gor_model.train_model(PathConstants.training_fasta_dir, PathConstants.training_dssp_dir)
         with open(PathConstants.dump_file, 'wb') as file:
             pickle.dump(gor_profile, file)
+
     print(gor_model.get_string_profile())
+    print(gor_model.predict_secondary_structure_for_seq("MVLEVYYTSLRCRCVQESSVFIPRRFIDRIQILPRGNGCPRKEIIVWKKNKSIVCVDPQAEWIQRMMEVLRKRSSSTLPVPVFKRKIP"))
+
 

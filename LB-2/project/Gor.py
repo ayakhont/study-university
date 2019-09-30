@@ -8,12 +8,38 @@ class Gor:
     def __init__(self, gor_profile: GorProfile):
         self.gor_profile = gor_profile
 
-    def train_model(self, training_fasta_dir: str, training_dssp_dir: str, window_size=1):
-        self.gor_profile.fill_in_profile(training_fasta_dir, training_dssp_dir, window_size)
+    def train_model(self, training_fasta_dir: str, training_dssp_dir: str):
+        self.gor_profile.fill_in_profile(training_fasta_dir, training_dssp_dir)
         self.gor_profile.normalize()
 
     def get_string_profile(self):
         return self.gor_profile.get_string()
+
+    def predict_secondary_structure_for_seq(self, sequence: str):
+        ss_string = ""
+        for i in range(0, len(sequence)):
+            score_map = {"E": 0.0, "H": 0.0, "C": 0.0}
+            vector_counter = -1
+            for j in range(i - self.gor_profile.window_size // 2,
+                           i + 1 + self.gor_profile.window_size // 2):
+                vector_counter += 1
+                if j < 0 or j >= len(sequence):
+                    continue
+                residue = sequence[j]
+                if residue == "X" or residue == "\n":
+                    continue
+                for ss_type in score_map.keys():
+                    score_map[ss_type] += self.gor_profile.calculate_score(residue, ss_type,
+                                                                           vector_counter)
+            ss = max(score_map.keys(), key=(lambda key: score_map[key]))
+            ss_string += ss
+
+        return ss_string
+
+
+
+
+
 
 
 

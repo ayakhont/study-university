@@ -26,6 +26,14 @@ class SecondaryStructureWindow:
             self.c_counts[position] += 1.0
             self.common_counts[position] += 1.0
 
+    def get_counts_by_ss_type(self, ss_type: str):
+        if ss_type == "E":
+            return self.e_counts
+        if ss_type == "H":
+            return self.h_counts
+        if ss_type == "-" or ss_type == "C":
+            return self.c_counts
+
     def get_string(self):
         return "Strand: {}\n, Helix: {}\n, Coil: {}\n, Common: {}\n"\
             .format(self.e_counts, self.h_counts, self.c_counts, self.common_counts)
