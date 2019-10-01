@@ -17,6 +17,7 @@ def prepare_full_dssp_files():
         process.wait()
         print(process.returncode)
 
+
 # parse each full dssp file with consistency corespondent fasta file
 # and generate for each id short secondary structure dssp file
 def prepare_short_dssp_files(final_blind_data):

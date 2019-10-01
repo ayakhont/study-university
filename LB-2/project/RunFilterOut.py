@@ -1,11 +1,6 @@
 from project.DownloadManager import DownloadManager
+from project.PathConstants import PathConstants
 from project.Utils import Utils
-
-blind_data = "/home/urfin/Education/LB-2/project/data_preparation/blind_data.txt"
-clustered_data = "/home/urfin/Education/LB-2/project/data_preparation/clustered.txt"
-filtered_blind_data = "/home/urfin/Education/LB-2/project/data_preparation/filtered_blind_data.txt"
-plastp_tab = "/home/urfin/Education/LB-2/project/data_preparation/hits.blast.tab"
-final_blind_data = "/home/urfin/Education/LB-2/project/data_preparation/final_blind_data.txt"
 
 
 # clear data received from PDB:
@@ -53,24 +48,23 @@ def filter_out_clustered_data(clustered_data, filtered_blind_data):
             line = lines[i]
             clustered_list.append(line[0:6])
 
-    blind_data_dict = Utils.get_map_from_fasta_file(blind_data)
+    blind_data_dict = Utils.get_map_from_fasta_file(PathConstants.blind_data)
 
     with open(filtered_blind_data, "w") as file:
         for key in clustered_list:
             file.write(">" + key + "\n")
             file.write(blind_data_dict[key] + "\n")
 
+
 # 1) sort tab output file by similarity and chose 150 sequences with the lowest similarity level
 # 2) download each of these sequence to appropriate pdb file
-def filter_out_considering_training_set(plastp_tab, final_blind_data):
+def filter_out_considering_training_set(plastp_tab):
     tab_list = list()
     with open(plastp_tab, "r") as file:
         for line in file:
             inner_list = line.split()
             tab_list.append(inner_list)
     tab_list.sort(key=lambda x: float(x[2]))
-
-    blind_data_dict = Utils.get_map_from_fasta_file(filtered_blind_data)
 
     dm = DownloadManager()
     count = 0
@@ -90,10 +84,9 @@ def filter_out_considering_training_set(plastp_tab, final_blind_data):
 
 
 # write down each of filtered seq to final_blind_data file
-def create_final_blind_data_file(final_blind_data, list_of_downloaded_id,
-                                 path="/home/urfin/Education/LB-2/project/data_preparation/pdb_files/"):
+def create_final_blind_data_file(final_blind_data, list_of_downloaded_id):
 
-    blind_data_dict = Utils.get_map_from_fasta_file(filtered_blind_data)
+    blind_data_dict = Utils.get_map_from_fasta_file(PathConstants.filtered_blind_data)
     with open(final_blind_data, "w") as file:
         for key in list_of_downloaded_id:
             file.write(">" + key + "\n")
@@ -103,6 +96,6 @@ def create_final_blind_data_file(final_blind_data, list_of_downloaded_id,
 if __name__ == "__main__":
     #filter_out_blind_data(blind_data)
     #filter_out_from_clustered_data(clustered_data, filtered_blind_data)
-    list_of_downloaded_id = filter_out_considering_training_set(plastp_tab, final_blind_data)
-    create_final_blind_data_file(final_blind_data, list_of_downloaded_id)
+    list_of_downloaded_id = filter_out_considering_training_set(PathConstants.plastp_tab)
+    create_final_blind_data_file(PathConstants.final_blind_data, list_of_downloaded_id)
 
