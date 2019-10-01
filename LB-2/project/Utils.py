@@ -1,3 +1,7 @@
+import os
+from Bio.PDB import PDBParser, Selection, PPBuilder
+
+
 class Utils:
 
     # build a map of seq Id ant it's sequence in one string
@@ -17,6 +21,22 @@ class Utils:
                     seq = map[current_seq] + current
                     map[current_seq] = seq
         return map
+
+    @staticmethod
+    def get_map_from_pdb_files(pdb_dir: str, list_of_ids: list) -> dict:
+        map_id_to_sequence = dict()
+        parser = PDBParser()
+        for id in list_of_ids:
+            with open(pdb_dir + id[0:4] + ".pdb", "r") as file:
+                structure = parser.get_structure(id[0:4], file)
+                ppb = PPBuilder()
+                sequence = ""
+                for pp in ppb.build_peptides(structure):
+                    if pp[0].parent._id == id[5]:
+                        sequence += pp.get_sequence()._data
+                map_id_to_sequence[id] = sequence
+
+        return map_id_to_sequence
 
     @staticmethod
     # H, G, I -> H

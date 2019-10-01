@@ -1,3 +1,6 @@
+import os
+import pickle
+
 from project.DownloadManager import DownloadManager
 from project.PathConstants import PathConstants
 from project.Utils import Utils
@@ -85,8 +88,7 @@ def filter_out_considering_training_set(plastp_tab):
 
 # write down each of filtered seq to final_blind_data file
 def create_final_blind_data_file(final_blind_data, list_of_downloaded_id):
-
-    blind_data_dict = Utils.get_map_from_fasta_file(PathConstants.filtered_blind_data)
+    blind_data_dict = Utils.get_map_from_pdb_files(PathConstants.blind_pdb_dir, list_of_downloaded_id)
     with open(final_blind_data, "w") as file:
         for key in list_of_downloaded_id:
             file.write(">" + key + "\n")
@@ -96,6 +98,12 @@ def create_final_blind_data_file(final_blind_data, list_of_downloaded_id):
 if __name__ == "__main__":
     #filter_out_blind_data(blind_data)
     #filter_out_from_clustered_data(clustered_data, filtered_blind_data)
-    list_of_downloaded_id = filter_out_considering_training_set(PathConstants.plastp_tab)
+    if os.path.isfile(PathConstants.dump_list_of_pdb_ids):
+        with open(PathConstants.dump_list_of_pdb_ids, 'rb') as file:
+            list_of_downloaded_id = pickle.load(file)
+    else:
+        list_of_downloaded_id = filter_out_considering_training_set(PathConstants.plastp_tab)
+        with open(PathConstants.dump_list_of_pdb_ids, 'wb') as file:
+            pickle.dump(list_of_downloaded_id, file)
     create_final_blind_data_file(PathConstants.final_blind_data, list_of_downloaded_id)
 
