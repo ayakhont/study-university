@@ -49,3 +49,17 @@ class Utils:
             return "E"
         else:
             return "C"
+
+    @staticmethod
+    def seq_to_profile(seq):
+        profile = []
+        aa_list = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
+        for res in seq:
+            profile_line = []
+            for aa in aa_list:
+                if res == aa:
+                    profile_line.append(1)
+                else:
+                    profile_line.append(0)
+            profile.append(profile_line)
+        return profile

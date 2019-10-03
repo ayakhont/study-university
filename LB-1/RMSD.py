@@ -1,5 +1,4 @@
 from typing import List
-import algorithms.NeedlemanWunschAlignment
 from Bio import SVDSuperimposer
 import numpy as np
 
@@ -14,9 +13,9 @@ class RMSD:
                   'ALYS': 'K', 'ASER': 'S'}
 
     def __init__(self, alignmentFileName, pdb1FileName, pdb2FileName):
-        alignmentFileName = alignmentFileName
-        pdb1FileName = pdb1FileName
-        pdb2FileName = pdb2FileName
+        self.alignmentFileName = alignmentFileName
+        self.pdb1FileName = pdb1FileName
+        self.pdb2FileName = pdb2FileName
 
     @staticmethod
     def get_atoms(pdbfile: str, chain: str, atm: str = 'CA') -> List[list]:

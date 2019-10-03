@@ -1,14 +1,20 @@
-class Car:
+from OOP.GearBox import GearBox
+
+
+class Car():
 
     # field declaration
     ability: str
     # field initialization
     number_of_wheels = 4
+    # declaration of gear_box
+    gear_box: GearBox
 
     # constructor of Car class
     def __init__(self, name):
         # field initialization
         self.ability = name
+        self.gear_box = GearBox(4)
 
     # polymorphic method in the context of its implementation in child and parent classes
     def present(self):
@@ -24,3 +30,9 @@ class Car:
     def change_car(self):
         self.ability = "ride has been changed"
         self.number_of_wheels = 3
+
+    @staticmethod
+    def print_idea():
+        print("bikes sucks")
+
+
