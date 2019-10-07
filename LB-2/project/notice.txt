@@ -64,7 +64,15 @@ Step 3: training
 Step 4: prediction
 ==================================================================
 
-Step 5: SVM
+Step 5: profiling
+==================================================================
+1) Before running PSI-BLAST we must build an index of the sequence DB
+makeblastdb –in uniprot_sprot.fasta -dbtype prot
+
+2)run PSI-BLAST
+psiblast -query ../fasta/d1a1xa_.fasta -db uniprot_sprot.fasta -evalue 0.01 -num_iterations 3 -out_ascii_pssm pssm/d1a1xa_.pssm -num_descriptions 10000 -num_alignments 10000 -out alns/d1a1xa_.alns.blast
+
+Step 6: SVM
 ==================================================================
 
 

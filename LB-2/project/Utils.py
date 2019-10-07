@@ -52,11 +52,12 @@ class Utils:
 
     @staticmethod
     def seq_to_profile(seq):
-        profile = []
-        aa_list = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I', 'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
+        profile = list()
+        residues = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I',
+                   'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
         for res in seq:
-            profile_line = []
-            for aa in aa_list:
+            profile_line = list()
+            for aa in residues:
                 if res == aa:
                     profile_line.append(1)
                 else:
