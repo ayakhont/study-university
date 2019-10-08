@@ -17,6 +17,12 @@ class PathConstants:
     training_dssp_dir = prj_dir + "dssp/"
     training_fasta_dir = prj_dir + "fasta/"
 
+    # paths for pssm
+    profiling_dir = prj_dir + "profiling/"
+    profiling_uniprot_sprot = profiling_dir + "uniprot_sprot.fasta"
+    profiling_pssm = profiling_dir + "pssm/"
+    profiling_alns = profiling_dir + "alns/"
+
     # cross validation dir
     cross_validation_dir = prj_dir + "cv/"
 

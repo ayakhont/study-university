@@ -10,10 +10,10 @@ class CrossValidation:
         self.test_seq_ids = test_seq_ids
         self.training_seq_ids = training_seq_ids
 
-    def get_training_seq_ids(self):
+    def get_training_seq_ids(self) -> list:
         return self.training_seq_ids
 
-    def get_test_seq_ids(self):
+    def get_test_seq_ids(self) -> list:
         return self.test_seq_ids
 
 
@@ -38,5 +38,6 @@ class CrossValidationSet:
                     cross_validation.test_seq_ids.append(line.rstrip())
             self.cross_validation_set.append(cross_validation)
 
-
+    def get_cross_validation_set(self) -> List[CrossValidation]:
+        return self.cross_validation_set
 
