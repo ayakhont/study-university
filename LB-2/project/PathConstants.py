@@ -29,3 +29,5 @@ class PathConstants:
     # dump files
     dump_file = prj_dir + "gor_profile.dump"
     dump_list_of_pdb_ids = prj_dir + "list_of_pdb_ids.dump"
+    dump_svm_profile_template = prj_dir + "svm_profile_{}.dump"
+    dump_svm_model_template = prj_dir + "svm_model_{}.dump"
