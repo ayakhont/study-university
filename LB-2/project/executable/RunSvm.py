@@ -8,7 +8,7 @@ from project.Svm import Svm
 def build_svm_instance(crossValidation: CrossValidation, number_of_model: int,
                        c_value: float, gamma_value: float) -> Svm:
     dump_profile = PathConstants.dump_svm_profile_template.format(number_of_model)
-    dump_model = PathConstants.dump_svm_model_template.format(number_of_model)
+    dump_model = PathConstants.dump_svm_model_template.format(number_of_model, c_value, gamma_value)
     if os.path.isfile(dump_profile):
         with open(dump_profile, 'rb') as file:
             profile = pickle.load(file)
@@ -26,6 +26,8 @@ def build_svm_instance(crossValidation: CrossValidation, number_of_model: int,
             with open(dump_model, 'rb') as file:
                 model = pickle.load(file)
                 svm = Svm(17, crossValidation, c_value, gamma_value, model=model)
+            with open(dump_profile, 'wb') as file:
+                pickle.dump(svm.svmProfile, file)
         else:
             svm = Svm(17, crossValidation, c_value, gamma_value)
             with open(dump_profile, 'wb') as file:
