@@ -1,6 +1,6 @@
-from thundersvm import SVC
-#from sklearn import svm
-#from sklearn.svm import SVC
+#from thundersvm import SVC
+from sklearn import svm
+from sklearn.svm import SVC
 
 from project.CrossValidationSet import CrossValidation
 from project.PathConstants import PathConstants
@@ -71,7 +71,7 @@ class Svm:
     def train_model(self):
         x_train = self.svmProfile.x_train
         y_train = self.svmProfile.y_train
-        self.model = SVC(C=self.c_value, kernel="rbf", gamma=self.gamma_value)
+        self.model = svm.SVC(C=self.c_value, kernel="rbf", gamma=self.gamma_value)
         self.model.fit(x_train, y_train)
 
 
