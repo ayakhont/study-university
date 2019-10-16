@@ -1,6 +1,6 @@
 from thundersvm import SVC
-#from sklearn import svm
-#from sklearn.svm import SVC
+# from sklearn import svm
+# from sklearn.svm import SVC
 
 from project.CrossValidationSet import CrossValidation
 from project.PathConstants import PathConstants
