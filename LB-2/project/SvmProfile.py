@@ -4,6 +4,9 @@ from typing import List
 # 1 = Helix     : H
 # 2 = Strand    : E
 # 3 = Coil      : C
+from project.Utils import Utils
+
+
 class SvmProfile:
 
     x_train: List[List[float]]
@@ -38,18 +41,9 @@ class SvmProfile:
                     vector.extend([0.0] * 20)
                     continue
                 vector.extend(pssm_list[j])
-            self.add_element(vector, SvmProfile.convert_ss_type_to_number(dssp_line[i]))
+            self.add_element(vector, Utils.convert_ss_type_to_number(dssp_line[i]))
 
     def print(self):
         for i in range(0, len(self.y_train)):
             print("{}: [{}] {}".format(self.y_train[i], len(self.x_train[i]), self.x_train[i]))
-
-    @staticmethod
-    def convert_ss_type_to_number(ss_type: str):
-        if ss_type == "H":
-            return 1
-        if ss_type == "E":
-            return 2
-        if ss_type == "-" or ss_type == "C":
-            return 3
 

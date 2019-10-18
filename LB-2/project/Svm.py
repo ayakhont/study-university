@@ -46,8 +46,8 @@ class Svm:
             for dssp_line_in_file in dssp_file:
                 if dssp_line_in_file[0] != '>':
                     dssp_line = dssp_line_in_file.rstrip()
-        pssm_list = list()
 
+        pssm_list = list()
         if os.path.isfile(PathConstants.profiling_pssm + id + ".pssm"):
             with open(PathConstants.profiling_pssm + id + ".pssm", "r") as pssm_file:
                 is_start = False

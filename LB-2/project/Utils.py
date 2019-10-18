@@ -51,16 +51,19 @@ class Utils:
             return "C"
 
     @staticmethod
-    def seq_to_profile(seq):
-        profile = list()
-        residues = ['A', 'R', 'N', 'D', 'C', 'Q', 'E', 'G', 'H', 'I',
-                   'L', 'K', 'M', 'F', 'P', 'S', 'T', 'W', 'Y', 'V']
-        for res in seq:
-            profile_line = list()
-            for aa in residues:
-                if res == aa:
-                    profile_line.append(1)
-                else:
-                    profile_line.append(0)
-            profile.append(profile_line)
-        return profile
+    def convert_ss_type_to_number(ss_type: str) -> int:
+        if ss_type == "H":
+            return 1
+        if ss_type == "E":
+            return 2
+        if ss_type == "-" or ss_type == "C":
+            return 3
+
+    @staticmethod
+    def convert_number_to_ss_type(number: int) -> str:
+        if number == 1:
+            return "H"
+        if number == 2:
+            return "E"
+        if number == 3:
+            return "-"
