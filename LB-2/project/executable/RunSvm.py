@@ -1,9 +1,12 @@
 import os
 import pickle
+from typing import List
+
 from thundersvm import SVC
 
 from project.CrossValidationSet import CrossValidationSet, CrossValidation
 from project.PathConstants import PathConstants
+from project.Prediction import Prediction
 from project.Svm import Svm
 from project.SvmProfile import SvmProfile
 from project.Utils import Utils
@@ -61,13 +64,42 @@ def test_prediction():
     print(ss)
 
 
-def train_models(c_value, gamma_value):
-    cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
+def predict(c_value: float, gamma_value: float, cross_validation_set: CrossValidationSet):
+    for i in range(0, 5):
+        cross_validation = cross_validation_set.get_cross_validation_set()[i]
+        svm = build_svm_instance(cross_validation, i, c_value, gamma_value, True)
+        list_of_predictions = list()
+        for test_id in cross_validation.get_test_seq_ids():
+            y_train, x_train = Svm.parse_pssm_by_id(test_id)
+            if len(x_train) == 0:
+                continue
+            svmProfile = SvmProfile(window_size)
+            svmProfile.refill_by_seq_profile(y_train, x_train)
+            if len(svmProfile.x_train) == 0:
+                continue
+
+            array = svm.model.predict(svmProfile.x_train)
+
+            ss = ""
+            for letter in array:
+                ss += Utils.convert_number_to_ss_type(int(letter))
+            prediction = Prediction(test_id, "".join(y_train), ss)
+            list_of_predictions.append(prediction)
+        predictions_file = PathConstants.prediction_svm_template.format(i, c_value, gamma_value)
+        with open(predictions_file, 'wb') as file:
+            pickle.dump(list_of_predictions, file)
+
+
+def train_models(c_value, gamma_value, cross_validation_set):
     for i in range(0, 5):
         build_svm_instance(cross_validation_set.get_cross_validation_set()[i], i, c_value, gamma_value)
 
+
 if __name__ == "__main__":
-    #train_models(2.0, 0.5)
-    test_prediction()
+    cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
+    #train_models(4.0, 2.0, cross_validation_set)
+    #train_models(4.0, 0.5, cross_validation_set)
+    #test_prediction()
+    predict(4.0, 2.0, cross_validation_set)
 
 

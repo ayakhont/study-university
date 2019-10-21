@@ -31,3 +31,6 @@ class PathConstants:
     dump_list_of_pdb_ids = prj_dir + "list_of_pdb_ids.dump"
     dump_svm_profile_template = profiling_dir + "svm_profile_{}.dump"
     dump_svm_model_template = prj_dir + "models/svm_model_{}_C{}_G{}.dump"
+
+    # paths for prediction
+    prediction_svm_template = prj_dir + "predictions/svm/predictions_{}_C{}_G{}.dump"
