@@ -1,7 +1,5 @@
 import os
 import pickle
-from typing import List
-
 from thundersvm import SVC
 
 from project.CrossValidationSet import CrossValidationSet, CrossValidation
@@ -99,7 +97,9 @@ if __name__ == "__main__":
     cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
     #train_models(4.0, 2.0, cross_validation_set)
     #train_models(4.0, 0.5, cross_validation_set)
+    #train_models(2.0, 2.0, cross_validation_set)
+    #train_models(2.0, 0.5, cross_validation_set)
     #test_prediction()
-    predict(4.0, 2.0, cross_validation_set)
+    predict(2.0, 0.5, cross_validation_set)
 
 
