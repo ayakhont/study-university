@@ -9,6 +9,10 @@ import os.path
 
 
 class Svm:
+    c_gamma_parameters = [[4.0, 2.0],
+                          [4.0, 0.5],
+                          [2.0, 2.0],
+                          [2.0, 0.5]]
 
     window_size: int
     crossValidation: CrossValidation
@@ -73,5 +77,3 @@ class Svm:
         y_train = self.svmProfile.y_train
         self.model = SVC(C=self.c_value, kernel="rbf", gamma=self.gamma_value)
         self.model.fit(x_train, y_train)
-
-
