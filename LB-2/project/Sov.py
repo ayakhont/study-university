@@ -1,5 +1,7 @@
 from typing import List
 
+from project.Prediction import Prediction
+
 
 class Sov:
     intersections: List[list]       # contains lists of intersections with indexes of segments
@@ -14,7 +16,9 @@ class Sov:
         self.predicted = list()
         self.ss_type = ss_type
 
-    def increment(self, observed_str: str, predicted_str: str):
+    def fill_in(self, prediction: Prediction):
+        observed_str = prediction.ss_checked
+        predicted_str = prediction.ss_predicted
         is_continued_observed = False
         is_continued_predicted = False
         temp_observed_list = list()
@@ -84,7 +88,8 @@ class Sov:
     @staticmethod
     def test():
         sov = Sov("H")
-        sov.increment("CCCHHHHHCCCCCCCCHHHHHHHHHHCCC", "CCCCCCCCCCCHHHHHHHCCCCCHHHHCC")
+        prediction = Prediction("dsad1", "CCCHHHHHCCCCCCCCHHHHHHHHHHCCC", "CCCCCCCCCCCHHHHHHHCCCCCHHHHCC")
+        sov.fill_in(prediction)
         print(sov.observed)
         print(sov.predicted)
         print(sov.intersections)
