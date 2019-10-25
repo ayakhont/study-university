@@ -7,7 +7,12 @@ from project.Prediction import Prediction
 from project.Svm import Svm
 
 
-def calculate_evaluation(c_value: float, gamma_value: float):
+def calculate_sov(c_value: float, gamma_value: float):
+
+
+
+
+def calculate_mcc_and_accuracy(c_value: float, gamma_value: float):
     mcc_h = 0.0
     mcc_e = 0.0
     mcc_c = 0.0
@@ -38,4 +43,4 @@ def calculate_evaluation(c_value: float, gamma_value: float):
 
 if __name__ == "__main__":
     for pair_of_parameters in Svm.c_gamma_parameters:
-        calculate_evaluation(pair_of_parameters[0], pair_of_parameters[1])
+        calculate_mcc_and_accuracy(pair_of_parameters[0], pair_of_parameters[1])
