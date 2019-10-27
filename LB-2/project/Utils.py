@@ -1,4 +1,4 @@
-import os
+import math
 from Bio.PDB import PDBParser, Selection, PPBuilder
 
 
@@ -67,3 +67,11 @@ class Utils:
             return "E"
         if number == 3:
             return "-"
+
+    @staticmethod
+    def calculate_sd(values: list) -> float:
+        mean = sum(values) / len(values)
+        sum_of_squares = 0.0
+        for value in values:
+            sum_of_squares += (value - mean) ** 2
+        return math.sqrt(sum_of_squares / len(values))
