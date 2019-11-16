@@ -8,8 +8,8 @@ class Gor:
     def __init__(self, gor_profile: GorProfile):
         self.gor_profile = gor_profile
 
-    def train_model(self, training_fasta_dir: str, training_dssp_dir: str):
-        self.gor_profile.fill_in_profile(training_fasta_dir, training_dssp_dir)
+    def train_model(self, training_fasta_dir: str, training_dssp_dir: str, ids: list):
+        self.gor_profile.fill_in_profile(training_fasta_dir, training_dssp_dir, ids)
         self.gor_profile.normalize()
 
     def get_string_profile(self):
@@ -35,6 +35,11 @@ class Gor:
             ss_string += ss
 
         return ss_string
+
+    def predict_secondary_structure_by_id(self, seq_id: str, ) -> (ss_checked, ss_predicted):
+
+        return ss_checked, ss_predicted
+
 
 
 

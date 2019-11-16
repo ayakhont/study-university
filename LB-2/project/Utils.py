@@ -23,6 +23,19 @@ class Utils:
         return map
 
     @staticmethod
+    def get_seq_from_fasta_file_by_seq_id(fasta_file_path: str, seq_id: str) -> str:
+        sequence = ""
+        with open(fasta_file_path, "r") as f:
+            lines = f.readlines()
+            current_seq = ""
+            for i in range(0, len(lines)):
+                line = lines[i]
+                if line[0] == ">":
+
+        return sequence
+
+
+    @staticmethod
     def get_map_from_pdb_files(pdb_dir: str, list_of_ids: list) -> dict:
         map_id_to_sequence = dict()
         parser = PDBParser()

@@ -80,8 +80,9 @@ class GorProfile:
             self.residues_dict[key] = ss
 
     # fill in GOR profile from list of dssp and fasta files
-    def fill_in_profile(self, training_fasta_dir: str, training_dssp_dir: str):
-        for dssp_filename in os.listdir(training_dssp_dir):
+    def fill_in_profile(self, training_fasta_dir: str, training_dssp_dir: str, ids: list):
+        for training_id in ids:
+            dssp_filename = training_id + ".dssp"
             with open(training_dssp_dir + dssp_filename, "r") as dssp_file:
                 fasta_filename = dssp_filename.replace("dssp", "fasta")
                 with open(training_fasta_dir + fasta_filename, "r") as fasta_file:
