@@ -1,4 +1,5 @@
 from project.GorProfile import GorProfile
+from project.Utils import Utils
 
 
 class Gor:
@@ -18,7 +19,7 @@ class Gor:
     def predict_secondary_structure_for_seq(self, sequence: str):
         ss_string = ""
         for i in range(0, len(sequence)):
-            score_map = {"E": 0.0, "H": 0.0, "C": 0.0}
+            score_map = {"E": 0.0, "H": 0.0, "-": 0.0}
             vector_counter = -1
             for j in range(i - self.gor_profile.window_size // 2,
                            i + 1 + self.gor_profile.window_size // 2):
@@ -36,9 +37,12 @@ class Gor:
 
         return ss_string
 
-    def predict_secondary_structure_by_id(self, seq_id: str, ) -> (ss_checked, ss_predicted):
+    def predict_secondary_structure_by_id(self, seq_id: str, fasta_dir_path: str) -> (str, str):
+        fasta_file_path = fasta_dir_path + seq_id + ".fasta"
+        sequence = Utils.get_seq_from_fasta_file(fasta_file_path)
+        ss_predicted = self.predict_secondary_structure_for_seq(sequence)
 
-        return ss_checked, ss_predicted
+        return ss_predicted
 
 
 

@@ -23,17 +23,16 @@ class Utils:
         return map
 
     @staticmethod
-    def get_seq_from_fasta_file_by_seq_id(fasta_file_path: str, seq_id: str) -> str:
-        sequence = ""
+    def get_seq_from_fasta_file(fasta_file_path: str) -> str:
         with open(fasta_file_path, "r") as f:
             lines = f.readlines()
-            current_seq = ""
+            sequence = ""
             for i in range(0, len(lines)):
                 line = lines[i]
-                if line[0] == ">":
+                if line[0] != ">":
+                    sequence += line.rstrip()
 
         return sequence
-
 
     @staticmethod
     def get_map_from_pdb_files(pdb_dir: str, list_of_ids: list) -> dict:

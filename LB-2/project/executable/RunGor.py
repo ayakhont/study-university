@@ -6,6 +6,7 @@ from project.Gor import Gor
 from project.GorProfile import GorProfile
 from project.PathConstants import PathConstants
 from project.Prediction import Prediction
+from project.Utils import Utils
 
 test_seq = "NLTLTHFKGPLYIVEDKEYVQENSMVYIGTDGITIIGATWTPETAETLYKEIRKVSPLPINEVINTNYHTDRAGGNAYWKTLGAKIVATQMT" \
            "YDLQKSQWGSIVNFTRQGNNKYPNLEKSLPDTVFPGDFNLQNGSIRAMYLGEAHTKDGIFVYFPAERVLYGNCILKENLGNMSFANRTEYPK" \
@@ -36,6 +37,7 @@ def test_prediction(sequence: str):
     else:
         raise Exception("Gor profile is not found!")
 
+
 def predict(cross_validation_set: CrossValidationSet):
     for i in range(0, 5):
         cross_validation = cross_validation_set.get_cross_validation_set()[i]
@@ -43,8 +45,15 @@ def predict(cross_validation_set: CrossValidationSet):
             profile = pickle.load(file)
             gor_model = Gor(profile)
             list_of_predictions = list()
-            for test_id in cross_validation.get_test_seq_ids():
-                prediction = Prediction(test_id, )
+            for seq_id in cross_validation.get_test_seq_ids():
+                ss_predicted = gor_model.predict_secondary_structure_by_id(
+                    seq_id, PathConstants.training_fasta_dir)
+                dssp_file_path = PathConstants.training_dssp_dir + seq_id + ".dssp"
+                ss_checked = Utils.get_seq_from_fasta_file(dssp_file_path)
+                prediction = Prediction(seq_id, ss_checked, ss_predicted)
+                list_of_predictions.append(prediction)
+            with open(PathConstants.prediction_gor_template.format(i), 'wb') as pr_file:
+                pickle.dump(list_of_predictions, pr_file)
 
 
 if __name__ == "__main__":
