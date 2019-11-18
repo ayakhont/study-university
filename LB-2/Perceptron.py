@@ -3,7 +3,7 @@ import numpy as np
 
 class Perceptron(object):
 
-    def __init__(self, no_of_inputs, threshold=100, learning_rate=0.01):
+    def __init__(self, no_of_inputs, threshold=5, learning_rate=0.01):
         self.threshold = threshold
         self.learning_rate = learning_rate
         self.weights = np.zeros(no_of_inputs + 1)
@@ -37,7 +37,13 @@ if __name__ == "__main__":
     model.train(training_inputs, labels)
 
     inputs = np.array([1, 1])
-    print(model.predict(inputs))
+    print("[1, 1]" + ": " + str(model.predict(inputs)))
 
     inputs = np.array([0, 1])
-    print(model.predict(inputs))
+    print("[0, 1]" + ": " + str(model.predict(inputs)))
+
+    inputs = np.array([1, 0])
+    print("[1, 0]" + ": " + str(model.predict(inputs)))
+
+    inputs = np.array([0, 0])
+    print("[0, 0]" + ": " + str(model.predict(inputs)))

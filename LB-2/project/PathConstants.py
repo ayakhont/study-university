@@ -12,6 +12,7 @@ class PathConstants:
     clustered_data = prj_dir + "data_preparation/clustered.txt"
     blind_data = prj_dir + "data_preparation/blind_data.txt"
     pdb_files = prj_dir + "data_preparation/pdb_files/"
+    blind_fasta_dir = prj_dir + "data_preparation/fasta_files/"
 
     # paths for training
     training_dssp_dir = prj_dir + "dssp/"
@@ -22,6 +23,8 @@ class PathConstants:
     profiling_uniprot_sprot = profiling_dir + "uniprot_sprot.fasta"
     profiling_pssm = profiling_dir + "pssm/"
     profiling_alns = profiling_dir + "alns/"
+    profiling_pssm_blind = profiling_dir + "pssm.blind/"
+    profiling_alns_blind = profiling_dir + "alns.blind/"
 
     # cross validation dir
     cross_validation_dir = prj_dir + "cv/"
@@ -35,3 +38,5 @@ class PathConstants:
     # paths for prediction
     prediction_svm_template = prj_dir + "predictions/svm/predictions_{}_C{}_G{}.dump"
     prediction_gor_template = prj_dir + "predictions/gor/predictions_{}.dump"
+    prediction_gor_template_blind = prj_dir + "predictions/gor/predictions_blind{}.dump"
+    prediction_svm_template_blind = prj_dir + "predictions/svm/predictions.dump"

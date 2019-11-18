@@ -56,10 +56,29 @@ def predict(cross_validation_set: CrossValidationSet):
                 pickle.dump(list_of_predictions, pr_file)
 
 
+def predict_blind_set():
+    for i in range(0, 5):
+        with open(PathConstants.dump_gor_profile_template.format(i), 'rb') as file:
+            profile = pickle.load(file)
+            gor_model = Gor(profile)
+            list_of_predictions = list()
+            map = Utils.get_map_from_fasta_file(PathConstants.final_blind_data)
+            for seq_id, sequence in map.items():
+                ss_predicted = gor_model.predict_secondary_structure_for_seq(sequence)
+                dssp_file_path = PathConstants.blind_dssp_short_dir + seq_id[0:4] + ".dssp"
+                ss_checked = Utils.get_seq_from_fasta_file(dssp_file_path)
+                ss_checked = ss_checked.replace("C", "-")
+                prediction = Prediction(seq_id, ss_checked, ss_predicted)
+                list_of_predictions.append(prediction)
+            with open(PathConstants.prediction_gor_template_blind.format(i), 'wb') as pr_file:
+                pickle.dump(list_of_predictions, pr_file)
+
+
 if __name__ == "__main__":
-    cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
+    # cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
     # train_models(cross_validation_set)
     # test_prediction(test_seq)
-    predict(cross_validation_set)
+    # predict(cross_validation_set)
+    predict_blind_set()
 
 
