@@ -53,7 +53,7 @@ def test_prediction():
     svm = build_svm_instance(cross_validation_set.get_cross_validation_set()[0], 0,
                            c_value, gamma_value, True)
     svmProfile = SvmProfile(window_size)
-    y_train, x_train = Svm.parse_pssm_by_id("d1a9xa1")
+    y_train, x_train = Svm.parse_pssm_by_id("d1a9xa1", False)
     svmProfile.refill_by_seq_profile(y_train, x_train)
     array = svm.model.predict(svmProfile.x_train)
     ss = ""
@@ -68,7 +68,7 @@ def predict(c_value: float, gamma_value: float, cross_validation_set: CrossValid
         svm = build_svm_instance(cross_validation, i, c_value, gamma_value, True)
         list_of_predictions = list()
         for test_id in cross_validation.get_test_seq_ids():
-            y_train, x_train = Svm.parse_pssm_by_id(test_id)
+            y_train, x_train = Svm.parse_pssm_by_id(test_id, False)
             if len(x_train) == 0:
                 continue
             svmProfile = SvmProfile(window_size)
@@ -88,18 +88,46 @@ def predict(c_value: float, gamma_value: float, cross_validation_set: CrossValid
             pickle.dump(list_of_predictions, file)
 
 
+def predict_for_blind_set(c_value: float, gamma_value: float):
+    map = Utils.get_map_from_fasta_file(PathConstants.final_blind_data)
+    test_seq_ids = list(map.keys())
+    cross_validation = CrossValidation(list(), test_seq_ids)
+    svm = build_svm_instance(cross_validation, 0, c_value, gamma_value, True)
+    list_of_predictions = list()
+    for test_id in cross_validation.get_test_seq_ids():
+        y_train, x_train = Svm.parse_pssm_by_id(test_id, True)
+        y_train = y_train.replace("C", "-")
+        if len(x_train) == 0:
+            continue
+        svmProfile = SvmProfile(window_size)
+        svmProfile.refill_by_seq_profile(y_train, x_train)
+        if len(svmProfile.x_train) == 0:
+            continue
+
+        array = svm.model.predict(svmProfile.x_train)
+
+        ss = ""
+        for letter in array:
+            ss += Utils.convert_number_to_ss_type(int(letter))
+        prediction = Prediction(test_id, "".join(y_train), ss)
+        list_of_predictions.append(prediction)
+    predictions_file = PathConstants.prediction_svm_template_blind
+    with open(predictions_file, 'wb') as file:
+        pickle.dump(list_of_predictions, file)
+
+
 def train_models(c_value, gamma_value, cross_validation_set):
     for i in range(0, 5):
         build_svm_instance(cross_validation_set.get_cross_validation_set()[i], i, c_value, gamma_value)
 
 
 if __name__ == "__main__":
-    cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
+    #cross_validation_set = CrossValidationSet(PathConstants.cross_validation_dir)
     #train_models(4.0, 2.0, cross_validation_set)
     #train_models(4.0, 0.5, cross_validation_set)
     #train_models(2.0, 2.0, cross_validation_set)
     #train_models(2.0, 0.5, cross_validation_set)
     #test_prediction()
-    predict(2.0, 0.5, cross_validation_set)
+    predict_for_blind_set(2.0, 0.5)
 
 

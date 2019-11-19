@@ -1,6 +1,4 @@
 from thundersvm import SVC
-# from sklearn import svm
-# from sklearn.svm import SVC
 
 from project.CrossValidationSet import CrossValidation
 from project.PathConstants import PathConstants
@@ -39,21 +37,29 @@ class Svm:
     def fill_in_svm_profile(self):
         svmProfile = SvmProfile(self.window_size)
         for id in self.crossValidation.get_training_seq_ids():
-            y_train, x_train = Svm.parse_pssm_by_id(id)
+            y_train, x_train = Svm.parse_pssm_by_id(id, False)
             svmProfile.refill_by_seq_profile(y_train, x_train)
         return svmProfile
 
     @staticmethod
-    def parse_pssm_by_id(id: str) -> (list, list):
+    def parse_pssm_by_id(id: str, is_for_blind_set: bool) -> (list, list):
         dssp_line = ""
-        with open(PathConstants.training_dssp_dir + id + ".dssp", "r") as dssp_file:
+        if is_for_blind_set:
+            training_dssp_path = PathConstants.blind_dssp_short_dir + id[0:4] + ".dssp"
+        else:
+            training_dssp_path = PathConstants.training_dssp_dir + id + ".dssp"
+        with open(training_dssp_path, "r") as dssp_file:
             for dssp_line_in_file in dssp_file:
                 if dssp_line_in_file[0] != '>':
                     dssp_line = dssp_line_in_file.rstrip()
 
         pssm_list = list()
-        if os.path.isfile(PathConstants.profiling_pssm + id + ".pssm"):
-            with open(PathConstants.profiling_pssm + id + ".pssm", "r") as pssm_file:
+        if is_for_blind_set:
+            profiling_pssm = PathConstants.profiling_pssm_blind + id + ".pssm"
+        else:
+            profiling_pssm = PathConstants.profiling_pssm + id + ".pssm"
+        if os.path.isfile(profiling_pssm):
+            with open(profiling_pssm, "r") as pssm_file:
                 is_start = False
                 for line in pssm_file:
                     splitted_line = line.split()

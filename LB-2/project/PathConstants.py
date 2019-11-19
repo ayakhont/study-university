@@ -39,4 +39,4 @@ class PathConstants:
     prediction_svm_template = prj_dir + "predictions/svm/predictions_{}_C{}_G{}.dump"
     prediction_gor_template = prj_dir + "predictions/gor/predictions_{}.dump"
     prediction_gor_template_blind = prj_dir + "predictions/gor/predictions_blind{}.dump"
-    prediction_svm_template_blind = prj_dir + "predictions/svm/predictions.dump"
+    prediction_svm_template_blind = prj_dir + "predictions/svm/predictions_blind.dump"
