@@ -2,6 +2,10 @@ class PathConstants:
 
     prj_dir = "/home/urfin/Education/LB-2/project/"
 
+    # paths for graphs
+    scope_file_path = prj_dir + "dir.cla.scope.2.06-stable.txt"
+    tax_file_path = prj_dir + "tax_file.txt"
+
     # paths for blind set
     plastp_tab = prj_dir + "data_preparation/hits.blast.tab"
     blind_pdb_dir = prj_dir + "data_preparation/pdb_files/"

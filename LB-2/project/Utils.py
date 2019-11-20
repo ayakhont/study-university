@@ -87,3 +87,4 @@ class Utils:
         for value in values:
             sum_of_squares += (value - mean) ** 2
         return math.sqrt(sum_of_squares / len(values))
+

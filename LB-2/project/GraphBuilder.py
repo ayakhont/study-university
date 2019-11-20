@@ -1,9 +1,19 @@
+from typing import Dict
+
 import matplotlib.pyplot as plt
 import numpy as np
 from project.SecondaryStructure import SecondaryStructure
+import seaborn as sns
+import pandas as pd
 
 
 class GraphBuilder:
+
+    def convert_to_data_frame(self, residue_composition: dict) -> pd.DataFrame:
+        for key, value in residue_composition.items():
+            residue_composition[key] = value.convert_to_list()
+        data_frame = pd.DataFrame.from_dict(residue_composition)
+        return data_frame
 
     def plot_bar_chart(self, residue_composition: dict):
         labels = residue_composition.keys()
@@ -19,7 +29,7 @@ class GraphBuilder:
             total_means.append(obj.e_count + obj.h_count + obj.c_count)
 
         x = np.arange(len(labels))  # the label locations
-        width = 0.35  # the width of the bars
+        width = 0.6  # the width of the bars
 
         fig, ax = plt.subplots()
         rects1 = ax.bar(x - width / 2, e_means, width/4, label='Strand')

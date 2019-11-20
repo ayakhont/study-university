@@ -2,24 +2,20 @@ import os
 import matplotlib.pyplot as plt
 import numpy as np
 from pathlib import Path
+
+from project.PathConstants import PathConstants
 from project.SecondaryStructure import SecondaryStructure
 from project.GraphBuilder import GraphBuilder
 from project.Scope import Scope
 from project.RestAdapter import RestAdapter
 
-project_dir = "/home/urfin/Dropbox/EBP 2018/LB2/Castrense/project/"
-dssp_dir = project_dir + "dssp/"
-fasta_dir = project_dir + "fasta/"
-scope_file_name = "dir.cla.scope.2.06-stable.txt"
-tax_file_name = "./tax_file.txt"
-
 
 def calculate_dssp_statistics(ss_composition: SecondaryStructure, residue_composition: dict):
     try:
-        for dssp_filename in os.listdir(dssp_dir):
-            with open(dssp_dir + dssp_filename, "r") as dssp_file:
+        for dssp_filename in os.listdir(PathConstants.training_dssp_dir):
+            with open(PathConstants.training_dssp_dir + dssp_filename, "r") as dssp_file:
                 fasta_filename = dssp_filename.replace("dssp", "fasta")
-                with open(fasta_dir + fasta_filename, "r") as fasta_file:
+                with open(PathConstants.training_fasta_dir + fasta_filename, "r") as fasta_file:
                     fasta_line = ''
                     for line in fasta_file:
                         if line[0] != '>':
@@ -63,7 +59,7 @@ def print_statistics(ss_composition: SecondaryStructure, residue_composition: di
 
 def parse_scope_file() -> list:
     scope_list = []
-    with open(project_dir + scope_file_name, "r") as file:
+    with open(PathConstants.scope_file_path, "r") as file:
         for line in file:
             if line[0] != "#":
                 list = line.split()
@@ -74,7 +70,7 @@ def parse_scope_file() -> list:
 
 def calculate_taxonomy_statistics(scope_data: list) -> dict:
     taxonomies = dict()
-    tax_file = Path(tax_file_name)
+    tax_file = Path(PathConstants.tax_file_path)
     if tax_file.exists():
         with open(tax_file, "r") as file:
             for line in file:
@@ -104,7 +100,7 @@ def calculate_taxonomy_statistics(scope_data: list) -> dict:
 if __name__ == "__main__":
     ss_composition = SecondaryStructure()
     residue_composition = dict()
-    graphBuilder = GraphBuilder
+    graphBuilder = GraphBuilder()
     #print(calculate_taxonomy_statistics(parse_scope_file()))
     #TODO finish parsing all taxa to the local txt file
     #TODO create pie chart for taxa
@@ -115,7 +111,7 @@ if __name__ == "__main__":
     print_statistics(ss_composition, residue_composition)
 
     graphBuilder.plot_pie_chart(ss_composition)
-    graphBuilder.plot_bar_chart(graphBuilder, residue_composition)
+    graphBuilder.plot_bar_chart(residue_composition)
 
 
 

@@ -1,5 +1,11 @@
 from xml.dom import minidom
 import requests
+from concurrent.futures import ProcessPoolExecutor
+from requests import Session
+from requests_futures.sessions import FuturesSession
+
+session = FuturesSession(executor=ProcessPoolExecutor(max_workers=10),
+                         session=Session())
 
 urlForSequence = 'http://www.ebi.ac.uk/pdbe/api/pdb/entry/molecules/'
 urlForReport = 'http://www.rcsb.org/pdb/rest/customReport.xml?pdbids='

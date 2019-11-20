@@ -44,3 +44,9 @@ class SecondaryStructure:
         ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
         ax1.axis('equal')
         plt.show()
+
+    def convert_to_list(self) -> list:
+        return [self.c_count,
+                self.h_count,
+                self.e_count,
+                self.common_count]
