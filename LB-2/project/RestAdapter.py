@@ -1,15 +1,13 @@
+from time import sleep
 from xml.dom import minidom
 import requests
-from concurrent.futures import ProcessPoolExecutor
-from requests import Session
+from concurrent.futures import TimeoutError
+from concurrent.futures import CancelledError
+from concurrent.futures import as_completed
 from requests_futures.sessions import FuturesSession
 
-session = FuturesSession(executor=ProcessPoolExecutor(max_workers=10),
-                         session=Session())
-
 urlForSequence = 'http://www.ebi.ac.uk/pdbe/api/pdb/entry/molecules/'
-urlForReport = 'http://www.rcsb.org/pdb/rest/customReport.xml?pdbids='
-
+urlForReport = 'http://www.rcsb.org/pdb/rest/customReport.xml?pdbids={}&customReportColumns=taxonomy'
 
 class RestAdapter:
 
@@ -17,15 +15,31 @@ class RestAdapter:
         return
 
     @staticmethod
-    def get_taxonomy_by_protein_id(proteinId):
-        result = requests.get(urlForReport + proteinId + "&customReportColumns=taxonomy")
-        if (result.status_code == 200):
-            xmldoc = minidom.parseString(result.text)
-            element = xmldoc.getElementsByTagName("dimEntity.taxonomy")
-            if len(element) != 0:
-                return element[0].childNodes[0].data
+    def get_taxonomies_by_protein_ids(proteinIds: list, number_of_session_retry: int) -> list:
+        taxonomies = list()
+        try:
+            with FuturesSession() as session:
+                futures = [session.get(urlForReport.format(proteinId)) for proteinId in proteinIds]
+                try:
+                    for future in as_completed(futures, timeout=10):
+                        result = future.result()
+                        if result.status_code == 200:
+                            xmldoc = minidom.parseString(result.text)
+                            element = xmldoc.getElementsByTagName("dimEntity.taxonomy")
+                            if len(element) != 0 and len(element[0].childNodes) != 0:
+                                taxonomies.append(element[0].childNodes[0].data)
+                except TimeoutError:
+                    print("TimeoutError with set of pdb ids: {}".format(proteinIds))
+                except CancelledError:
+                    print("CancelledError with set of pdb ids: {}".format(proteinIds))
+        except Exception as e:
+            print("Some exception happened: " + str(e))
+            if number_of_session_retry > 0:
+                sleep(60)
+                number_of_session_retry -= 1
+                taxonomies = RestAdapter.get_taxonomies_by_protein_ids(proteinIds, number_of_session_retry)
 
-        return "None"
+        return taxonomies
 
     @staticmethod
     def fetchSequenceById(proteinId: str, chain: str) -> str:

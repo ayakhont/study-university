@@ -1,3 +1,4 @@
+import collections
 from typing import Dict
 
 import matplotlib.pyplot as plt
@@ -52,8 +53,37 @@ class GraphBuilder:
         plt.show()
 
     @staticmethod
-    def plot_pie_chart(ss: SecondaryStructure):
-        ss.plot_pie_chart_graph()
+    def plot_pie_chart(obj):
+        if isinstance(obj, SecondaryStructure):
+            obj.plot_pie_chart_graph()
+        if isinstance(obj, dict):
+            GraphBuilder.plot_pie_chart_graph_for_dict(obj)
+
+    @staticmethod
+    def plot_pie_chart_graph_for_dict(taxonomy_statistics: dict):
+        sorted_taxonomy_statistics = sorted(taxonomy_statistics.items(), key=lambda kv: kv[1],
+                                            reverse=True)
+        sorted_dict = collections.OrderedDict(sorted_taxonomy_statistics)
+        labels = list()
+        sizes = list()
+        total = sum(sorted_dict.values())
+        others = 0
+        showing_number = 9
+        for key, value in sorted_dict.items():
+            if showing_number > 0:
+                labels.append(key)
+                sizes.append(value/total*100)
+                showing_number -= 1
+                continue
+            others += value
+        labels.append("Others")
+        sizes.append(others/total*100)
+
+        fig1, ax1 = plt.subplots()
+        ax1.pie(sizes, labels=labels, autopct='%1.1f%%', startangle=90)
+        ax1.axis('equal')
+        plt.show()
+
 
     @staticmethod
     def autolabel(ax, rects):
