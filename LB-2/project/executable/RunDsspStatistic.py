@@ -111,7 +111,9 @@ if __name__ == "__main__":
     residue_composition = dict()
     graphBuilder = GraphBuilder()
 
-    #TODO create pie chart for taxa
+    taxonomy_statistics = calculate_taxonomy_statistics(parse_scope_file())
+    graphBuilder.plot_pie_chart(taxonomy_statistics)
+
     #TODO create heat map
     #TODO change the presentation of Y axis in bar chart
 
@@ -121,8 +123,7 @@ if __name__ == "__main__":
     # graphBuilder.plot_pie_chart(ss_composition)
     # graphBuilder.plot_bar_chart(residue_composition)
 
-    taxonomy_statistics = calculate_taxonomy_statistics(parse_scope_file())
-    graphBuilder.plot_pie_chart(taxonomy_statistics)
+
 
 
 
