@@ -114,14 +114,11 @@ if __name__ == "__main__":
     taxonomy_statistics = calculate_taxonomy_statistics(parse_scope_file())
     graphBuilder.plot_pie_chart(taxonomy_statistics)
 
-    #TODO create heat map
-    #TODO change the presentation of Y axis in bar chart
+    calculate_dssp_statistics(ss_composition, residue_composition)
+    print_statistics(ss_composition, residue_composition)
 
-    # calculate_dssp_statistics(ss_composition, residue_composition)
-    # print_statistics(ss_composition, residue_composition)
-    #
-    # graphBuilder.plot_pie_chart(ss_composition)
-    # graphBuilder.plot_bar_chart(residue_composition)
+    graphBuilder.plot_pie_chart(ss_composition)
+    graphBuilder.plot_bar_chart(residue_composition)
 
 
 

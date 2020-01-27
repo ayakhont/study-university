@@ -22,33 +22,39 @@ class GraphBuilder:
         h_means = []
         c_means = []
         total_means = []
+        total = 0
+        total_e = 0
+        total_h = 0
+        total_c = 0
         for key in labels:
             obj = residue_composition.get(key)
-            e_means.append(obj.e_count)
-            h_means.append(obj.h_count)
-            c_means.append(obj.c_count)
-            total_means.append(obj.e_count + obj.h_count + obj.c_count)
+            total += obj.e_count + obj.h_count + obj.c_count
+            total_e += obj.e_count
+            total_h += obj.h_count
+            total_c += obj.c_count
+        for key in labels:
+            obj = residue_composition.get(key)
+            e_means.append(obj.e_count/total_e*100)
+            h_means.append(obj.h_count/total_h*100)
+            c_means.append(obj.c_count/total_c*100)
+            total_means.append((obj.e_count + obj.h_count + obj.c_count)/total*100)
 
         x = np.arange(len(labels))  # the label locations
         width = 0.6  # the width of the bars
 
         fig, ax = plt.subplots()
-        rects1 = ax.bar(x - width / 2, e_means, width/4, label='Strand')
-        rects2 = ax.bar(x - width / 4, h_means, width/4, label='Helix')
-        rects3 = ax.bar(x + width / 4, c_means, width/4, label='Coil')
-        rects4 = ax.bar(x + width / 2, total_means, width/4, label='Total')
+        ax.bar(x - width / 2, e_means, width/4, label='Strand')
+        ax.bar(x - width / 4 + 0.05, h_means, width/4, label='Helix')
+        ax.bar(x + width / 4 - 0.05, c_means, width/4, label='Coil')
+        ax.bar(x + width / 2, total_means, width/4, label='Total')
 
         # Add some text for labels, title and custom x-axis tick labels, etc.
-        ax.set_ylabel('Number of residues')
-        ax.set_title('Number of residues by group')
+        ax.set_ylabel('% of total amount for each type')
+        ax.set_title('Number of residues grouped by symbol')
         ax.set_xticks(x)
         ax.set_xticklabels(labels)
         ax.legend()
 
-        self.autolabel(ax, rects1)
-        self.autolabel(ax, rects2)
-        self.autolabel(ax, rects3)
-        self.autolabel(ax, rects4)
         fig.tight_layout()
         plt.show()
 
@@ -68,7 +74,7 @@ class GraphBuilder:
         sizes = list()
         total = sum(sorted_dict.values())
         others = 0
-        showing_number = 9
+        showing_number = 8
         for key, value in sorted_dict.items():
             if showing_number > 0:
                 labels.append(key)

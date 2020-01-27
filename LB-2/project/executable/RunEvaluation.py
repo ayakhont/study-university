@@ -76,7 +76,7 @@ def calculate_evaluation(is_gor_evaluation: bool, is_blind: bool, c_value=None, 
 
 
 if __name__ == "__main__":
-    # for pair_of_parameters in c_gamma_parameters:
-    #     calculate_evaluation(False, pair_of_parameters[0], pair_of_parameters[1])
+    for pair_of_parameters in c_gamma_parameters:
+        calculate_evaluation(False, False, pair_of_parameters[0], pair_of_parameters[1])
     calculate_evaluation(True, False)
     calculate_evaluation(True, True)
