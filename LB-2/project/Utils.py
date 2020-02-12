@@ -82,9 +82,9 @@ class Utils:
 
     @staticmethod
     def calculate_sd(values: list) -> float:
-        mean = sum(values) / len(values)
+        mean = sum(values) / 100.0 / len(values)
         sum_of_squares = 0.0
         for value in values:
-            sum_of_squares += (value - mean) ** 2
+            sum_of_squares += (value / 100.0 - mean) ** 2
         return math.sqrt(sum_of_squares / len(values))
 
